@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 # Game Times
 LOADING_SCREEN_TIME = 3
 MINION_CLASH_TIME = 85
-FIRST_TOWER_TIME = 1500
+FIRST_TOWER_TIME = 1000
 MAX_GAME_TIME = 3000
 
 # Click coordinates to move/aim
@@ -28,8 +28,14 @@ CENTER_OF_SCREEN = (0.5, 0.5)
 # Click coordinates to purchase items
 AFK_OK_BUTTON = (0.4981, 0.4647)
 SYSTEM_MENU_X_BUTTON = (0.7729, 0.2488)
-SHOP_ITEM_BUTTONS = [(0.3216, 0.5036), (0.4084, 0.5096), (0.4943, 0.4928)]
+# SHOP_ITEM_BUTTONS = [(0.3216, 0.5036), (0.4084, 0.5096), (0.4943, 0.4928)]
+# fixed at first 220 270 315, 580 , (0.2636, 0.7552), (0.3076, 0.7552), (0.3564, 0.7552) 
+SHOP_ITEM_BUTTONS = [(0.2148, 0.7552)] 
 SHOP_PURCHASE_ITEM_BUTTON = (0.7586, 0.58)
+# 912 143
+SHOP_CLOSE = (0.8906, 0.1861)
+# 580 227
+FACE_FRONT = (0.5664, 0.2955)
 
 MAX_SERVER_ERRORS = 15
 
@@ -143,7 +149,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
 
     # Main attack move loop. This sequence attacks and then de-aggros to prevent them from dying 50 times.
     for i in range(8):
-        if game_server.get_summoner_health() < .7:
+        if game_server.get_summoner_health() < .3:
             keypress('f')
             right_click(retreat)
             sleep(4)
@@ -151,7 +157,17 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
         if game_server.summoner_is_dead():
             return
         attack_click(attack_position)
-        sleep(5)
+        sleep(15)
+        left_click(FACE_FRONT)
+        keypress('e')
+        sleep(1)
+        keypress('w')
+        sleep(1)
+        keypress('q')
+        sleep(1)
+        keypress('r')
+        keypress('r')
+        keypress('r')
         right_click(retreat)
         sleep(3)
 
@@ -160,7 +176,6 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
     # Ult and back
     keypress('f')
     attack_click(ULT_DIRECTION)
-    keypress('r')
     sleep(1)
     right_click(MINI_MAP_UNDER_TURRET)
     sleep(4)
@@ -171,16 +186,19 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
 def shop() -> None:
     """Opens the shop and attempts to purchase items via default shop hotkeys"""
     keypress('p')  # open shop
+    # repeat to click one
     left_click(random.choice(SHOP_ITEM_BUTTONS))
     left_click(SHOP_PURCHASE_ITEM_BUTTON)
-    keypress('esc')
+    # keypress('esc')
+    left_click(SHOP_CLOSE)
     left_click(SYSTEM_MENU_X_BUTTON)
 
 
 def upgrade_abilities() -> None:
     window.check_window_exists(window.GAME_WINDOW)
     keys.press_and_release('ctrl+r')
-    upgrades = ['ctrl+q', 'ctrl+w', 'ctrl+e']
+    keys.press_and_release('ctrl+r')
+    upgrades = ['ctrl+q', 'ctrl+w', 'ctrl+e','ctrl+q', 'ctrl+w', 'ctrl+e']
     random.shuffle(upgrades)
     for upgrade in upgrades:
         keys.press_and_release(upgrade)

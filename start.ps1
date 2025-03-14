@@ -1,0 +1,1 @@
+python "C:\temp\lol-bot-main\main.pyw"

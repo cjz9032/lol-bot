@@ -1,7 +1,7 @@
 """
 Controls the League Client and continually starts League of Legends games.
 """
-
+import shutil
 import logging
 import multiprocessing as mp
 import os
@@ -136,6 +136,8 @@ class Bot:
 
     def start_matchmaking(self) -> None:
         """Starts matchmaking for a particular game mode, will also wait out dodge timers."""
+        # reset again 
+        self.set_game_config()
         # Create lobby
         lobby_name = ""
         for lobby, lid in config.ALL_LOBBIES.items():
@@ -195,6 +197,8 @@ class Bot:
         log.info("Locking in champ")
         logged = False
         champ = ""
+        # https://darkintaqt.com/blog/champ-ids
+        priority_champs = [67, 222, 202, 21, 18]
         while True:
             try:
                 data = self.api.get_champ_select_data()
@@ -205,7 +209,14 @@ class Bot:
                 for action in data["actions"][0]:
                     if action["actorCellId"] == data["localPlayerCellId"]:
                         if action["championId"] == 0:  # No champ hovered. Hover a champion.
-                            champ = random.choice(champ_list)
+                            # log.info(f"No champ hovered : champ_list {champ_list}")
+                            available_priority_champs = [champ for champ in champ_list if champ in priority_champs]
+                            log.info(f"No champ hovered : available_priority_champs {available_priority_champs}")
+                            if available_priority_champs:
+                                champ = random.choice(available_priority_champs)
+                            else:
+                                champ = random.choice(champ_list)
+                            log.info(f"will hover : {champ}")
                             self.api.hover_champion(action["id"], champ)
                         elif not action["completed"]:  # Champ is hovered but not locked in.
                             self.api.lock_in_champion(action["id"], action["championId"])
@@ -325,6 +336,11 @@ class Bot:
         else:
             config_dir = os.path.join(self.config.macos_install_dir, 'contents/lol/config')
         game_config = os.path.join(config_dir, 'game.cfg')
+        input_config = os.path.join(config_dir, 'input.ini')
+        current_dir = os.path.dirname(__file__)
+        input_config_gj = os.path.join(current_dir, "../..", "input-gj.ini")
+        shutil.copy(input_config_gj, input_config)
+
         persisted_settings = os.path.join(config_dir, 'PersistedSettings.json')
         if OS != "Windows":
             os.chmod(persisted_settings, 0o644)
