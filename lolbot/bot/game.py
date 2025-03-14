@@ -19,10 +19,10 @@ FIRST_TOWER_TIME = 1000
 MAX_GAME_TIME = 3000
 
 # Click coordinates to move/aim
-# MINI_MAP_UNDER_TURRET = (0.88, 0.90)
-# 933 664
-MINI_MAP_UNDER_TURRET = (0.91, 0.86)
+MINI_MAP_UNDER_TURRET = (0.88, 0.90)
 MINI_MAP_CENTER_MID = (0.9035, 0.87)
+# 933 664
+MINI_MAP_CENTER_MID_ATTACK = (0.91, 0.86)
 MINI_MAP_ENEMY_NEXUS = (0.9628, 0.7852)
 ULT_DIRECTION = (0.7298, 0.2689)
 CENTER_OF_SCREEN = (0.5, 0.5)
@@ -101,7 +101,7 @@ def game_loop(game_server: GameServer) -> None:
             elif game_time < MINION_CLASH_TIME:
                 game_start(game_server)
             elif game_time < FIRST_TOWER_TIME:
-                play(game_server, MINI_MAP_CENTER_MID, MINI_MAP_UNDER_TURRET, 20)
+                play(game_server, MINI_MAP_CENTER_MID_ATTACK, MINI_MAP_UNDER_TURRET, 20)
             elif game_time < MAX_GAME_TIME:
                 play(game_server, MINI_MAP_ENEMY_NEXUS, MINI_MAP_ENEMY_NEXUS, 35)
             else:
