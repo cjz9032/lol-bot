@@ -15,13 +15,17 @@ log = logging.getLogger(__name__)
 # Game Times
 LOADING_SCREEN_TIME = 3
 MINION_CLASH_TIME = 85
-FIRST_TOWER_TIME = 1000
+GROW_TIME = 600
+FIRST_TOWER_TIME = 700
 MAX_GAME_TIME = 3000
 
 # Click coordinates to move/aim
 MINI_MAP_UNDER_TURRET = (0.88, 0.90)
 MINI_MAP_CENTER_MID = (0.9035, 0.87)
-MINI_MAP_ENEMY_NEXUS = (0.9628, 0.7852)
+# 933 664
+MINI_MAP_GROW_ATTACK = (0.9035, 0.87)
+MINI_MAP_CENTER_MID_ATTACK = (0.92, 0.85)
+MINI_MAP_ENEMY_NEXUS = (0.9628, 0.7752)
 ULT_DIRECTION = (0.7298, 0.2689)
 CENTER_OF_SCREEN = (0.5, 0.5)
 
@@ -35,7 +39,8 @@ SHOP_PURCHASE_ITEM_BUTTON = (0.7586, 0.58)
 # 912 143
 SHOP_CLOSE = (0.8906, 0.1861)
 # 580 227
-FACE_FRONT = (0.5664, 0.2955)
+FACE_FRONT = (0.5764, 0.2955)
+FACE_END = (0.4, 0.6)
 
 MAX_SERVER_ERRORS = 15
 
@@ -89,7 +94,9 @@ def game_loop(game_server: GameServer) -> None:
         while True:
             # Don't start new sequence when dead
             if game_server.summoner_is_dead():
-                sleep(2)
+                shop()
+                upgrade_abilities()
+                sleep(3)
                 continue
 
             # Take action based on game time
@@ -98,8 +105,10 @@ def game_loop(game_server: GameServer) -> None:
                 loading_screen(game_server)
             elif game_time < MINION_CLASH_TIME:
                 game_start(game_server)
+            elif game_time < GROW_TIME:
+                play(game_server, MINI_MAP_GROW_ATTACK, MINI_MAP_UNDER_TURRET, 20)
             elif game_time < FIRST_TOWER_TIME:
-                play(game_server, MINI_MAP_CENTER_MID, MINI_MAP_UNDER_TURRET, 20)
+                play(game_server, MINI_MAP_CENTER_MID_ATTACK, MINI_MAP_UNDER_TURRET, 20)
             elif game_time < MAX_GAME_TIME:
                 play(game_server, MINI_MAP_ENEMY_NEXUS, MINI_MAP_CENTER_MID, 35)
             else:
@@ -136,7 +145,7 @@ def game_start(game_server: GameServer) -> None:
     log.info("Playing Game")
 
 
-def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_to_lane: int) -> None:
+def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_to_lane: int, excited: bool = False) -> None:
     """Buys items, levels up abilities, heads to lane, attacks, retreats, backs"""
     shop()
     upgrade_abilities()
@@ -145,42 +154,37 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
     # Walk to lane
     attack_click(attack_position)
     keypress('d')  # ghost
-    sleep(time_to_lane)
+    sleep(time_to_lane/2)
 
     # Main attack move loop. This sequence attacks and then de-aggros to prevent them from dying 50 times.
-    for i in range(8):
-        if game_server.get_summoner_health() < .3:
+    for i in range(60):
+        if game_server.get_summoner_health() < .6:
             keypress('f')
             right_click(retreat)
-            sleep(4)
+            sleep(3)
             break
         if game_server.summoner_is_dead():
             return
+        
         attack_click(attack_position)
-        sleep(15)
-        left_click(FACE_FRONT)
-        keypress('e')
-        sleep(1)
-        keypress('w')
-        sleep(1)
+        left_click(FACE_END)
+        # keypress('e')
+        # sleep(1)
+        # keypress('w')
         keypress('q')
-        sleep(1)
+        # for i in range(1):
         keypress('r')
-        keypress('r')
-        keypress('r')
-        right_click(retreat)
-        sleep(3)
-
+        
     if game_server.summoner_is_dead():
         return
-    # Ult and back
-    keypress('f')
-    attack_click(ULT_DIRECTION)
-    sleep(1)
-    right_click(MINI_MAP_UNDER_TURRET)
-    sleep(4)
-    keypress('b')
-    sleep(10)
+    if not excited:
+        # Ult and back
+        # attack_click(ULT_DIRECTION)
+        # sleep(1)
+        right_click(MINI_MAP_UNDER_TURRET)
+        sleep(4)
+        keypress('b')
+        sleep(9)
 
 
 def shop() -> None:
@@ -196,7 +200,8 @@ def shop() -> None:
 
 def upgrade_abilities() -> None:
     window.check_window_exists(window.GAME_WINDOW)
-    keys.press_and_release('ctrl+r')
+    keys.press_and_release('ctrl+w')
+    keys.press_and_release('ctrl+q')
     keys.press_and_release('ctrl+r')
     upgrades = ['ctrl+q', 'ctrl+w', 'ctrl+e','ctrl+q', 'ctrl+w', 'ctrl+e']
     random.shuffle(upgrades)
@@ -208,14 +213,14 @@ def left_click(ratio: tuple) -> None:
     coords = window.convert_ratio(ratio, window.GAME_WINDOW)
     mouse.move(coords)
     mouse.left_click()
-    sleep(1)
+    sleep(0.6)
 
 
 def right_click(ratio: tuple) -> None:
     coords = window.convert_ratio(ratio, window.GAME_WINDOW)
     mouse.move(coords)
     mouse.right_click()
-    sleep(1)
+    sleep(0.6)
 
 
 def attack_click(ratio: tuple) -> None:
@@ -227,10 +232,10 @@ def attack_click(ratio: tuple) -> None:
     sleep(.1)
     mouse.left_click()
     keys.key_up('a')
-    sleep(1)
+    sleep(.6)
 
 
 def keypress(key: str) -> None:
     window.check_window_exists(window.GAME_WINDOW)
     keys.press_and_release(key)
-    sleep(1)
+    sleep(0.6)

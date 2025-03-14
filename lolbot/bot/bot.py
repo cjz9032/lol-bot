@@ -26,7 +26,7 @@ POPUP_SEND_EMAIL_X_RATIO = (0.6960, 0.1238)
 
 # Errors
 MAX_BOT_ERRORS = 5
-MAX_PHASE_ERRORS = 20
+MAX_PHASE_ERRORS = 999
 
 
 class BotError(Exception):
@@ -197,8 +197,10 @@ class Bot:
         log.info("Locking in champ")
         logged = False
         champ = ""
-        # https://darkintaqt.com/blog/champ-ids
-        priority_champs = [67, 222, 202, 21, 18]
+        # https://darkintaqt.com/blog/champ-ids 67, 222, 202, 21
+        # priority_champs = [18] # 小跑
+        priority_champs = [67] # VN
+        tried = False
         while True:
             try:
                 data = self.api.get_champ_select_data()
@@ -212,15 +214,18 @@ class Bot:
                             # log.info(f"No champ hovered : champ_list {champ_list}")
                             available_priority_champs = [champ for champ in champ_list if champ in priority_champs]
                             log.info(f"No champ hovered : available_priority_champs {available_priority_champs}")
-                            if available_priority_champs:
+                            if available_priority_champs and (not tried):
                                 champ = random.choice(available_priority_champs)
                             else:
                                 champ = random.choice(champ_list)
                             log.info(f"will hover : {champ}")
                             self.api.hover_champion(action["id"], champ)
+                            tried = True
                         elif not action["completed"]:  # Champ is hovered but not locked in.
+                            tried = True
                             self.api.lock_in_champion(action["id"], action["championId"])
                         else:  # Champ is locked in. Nothing left to do.
+                            tried = True
                             if not logged:
                                 log.info(f"Locked in: {champ}")
                                 log.info("Waiting for game to launch")
