@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 # Game Times
 LOADING_SCREEN_TIME = 3
 MINION_CLASH_TIME = 85
-FIRST_TOWER_TIME = 900
+FIRST_TOWER_TIME = 1000
 MAX_GAME_TIME = 3000
 
 # Click coordinates to move/aim
@@ -103,7 +103,7 @@ def game_loop(game_server: GameServer) -> None:
             elif game_time < FIRST_TOWER_TIME:
                 play(game_server, MINI_MAP_CENTER_MID, MINI_MAP_UNDER_TURRET, 20)
             elif game_time < MAX_GAME_TIME:
-                play(game_server, MINI_MAP_ENEMY_NEXUS, MINI_MAP_CENTER_MID, 35)
+                play(game_server, MINI_MAP_ENEMY_NEXUS, MINI_MAP_ENEMY_NEXUS, 35)
             else:
                 raise GameError("Game has exceeded the max time limit")
     except GameServerError as e:
