@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Tabs, Tab } from '@mui/material';
 import axios from 'axios';
+import { ClientStatus, BotInfo } from './types/bot';
+import { useRequest } from 'ahooks';
 
 // Import our tab components
 import BotTab from './components/BotTab';
@@ -35,32 +37,54 @@ function TabPanel(props: TabPanelProps) {
 
 function App() {
   const [value, setValue] = useState(0);
-  const [clientStatus, setClientStatus] = useState({
-    phase: 'None',
-    summoner_name: '-',
-    summoner_level: '-'
+  const [clientStatus, setClientStatus] = useState<ClientStatus>({    
+    phase: "",
+    summonerName: "",
+    summonerLevel: 0,
+    champion: "",
+    gameTime: ""
+  });
+  const [botInfo, setBotInfo] = useState<BotInfo>({    
+    status: "",
+    runTime: "",
+    games: 0,
+    errors: 0,
+    logs: "",
+    isRunning: false
   });
 
-  useEffect(() => {
-    const fetchStatus = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/status');
-        setClientStatus(response.data);
-      } catch (error) {
+  const { data, run } = useRequest(
+    async () => {
+      const response = await axios.get('http://localhost:5000/api/status');
+      return response.data;
+    },
+    {
+      pollingInterval: 1000,
+      pollingWhenHidden: false,
+      refreshOnWindowFocus: false,
+      onSuccess: (data) => {
+        setClientStatus(data);
+        setBotInfo({
+          status: data.status,
+          runTime: data.runTime,
+          games: data.games,
+          errors: data.errors,
+          logs: data.phase,
+          isRunning: data.isRunning
+        });
+      },
+      onError: (error) => {
         console.error('Error fetching status:', error);
       }
-    };
-
-    const interval = setInterval(fetchStatus, 15000);
-    return () => clearInterval(interval);
-  }, []);
+    }
+  );
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange}>
           <Tab label="Bot" />
@@ -72,7 +96,7 @@ function App() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <BotTab clientStatus={clientStatus} />
+        <BotTab clientStatus={clientStatus} botInfo={botInfo} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <AccountsTab />

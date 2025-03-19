@@ -23,6 +23,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^6.4.8",
+    "ahooks": "^3.8.4",
     "axios": "^1.8.3",
     "electron-updater": "^6.3.9"
   },
