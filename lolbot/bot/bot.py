@@ -11,6 +11,7 @@ import json
 import traceback
 from datetime import datetime, timedelta
 from time import sleep
+import sys
 
 from lolbot.bot import game, launcher
 from lolbot.system import mouse, window, cmd, OS
@@ -25,8 +26,8 @@ POST_GAME_SELECT_CHAMP_RATIO = (0.4977, 0.5333)
 POPUP_SEND_EMAIL_X_RATIO = (0.6960, 0.1238)
 
 # Errors
-MAX_BOT_ERRORS = 5
-MAX_PHASE_ERRORS = 999
+MAX_BOT_ERRORS = 3
+MAX_PHASE_ERRORS = 10
 
 
 class BotError(Exception):
@@ -71,6 +72,8 @@ class Bot:
                 self.phase_errors = 0
                 if self.bot_errors == MAX_BOT_ERRORS:
                     log.error("Max errors reached. Exiting")
+                    cmd.run(cmd.CLOSE_ALL)
+                    sys.exit()
                     return
                 else:
                     cmd.run(cmd.CLOSE_ALL)
@@ -148,6 +151,7 @@ class Bot:
             self.api.create_lobby(self.lobby)
             sleep(3)
         except LCUError:
+            sleep(3)
             return
 
         # Start Matchmaking
@@ -326,11 +330,15 @@ class Bot:
         """Checks if the League Client is patching and waits till it is finished."""
         log.info("Checking for Client Updates")
         logged = False
+        tried = 0
         while self.api.is_client_patching():
             if not logged:
                 log.info("Client is patching...")
                 logged = True
+            tried += 1
             sleep(3)
+            if tried > 30:
+                raise BotError("Client is patching too long")
         log.info("Client is up to date")
 
     def set_game_config(self) -> None:

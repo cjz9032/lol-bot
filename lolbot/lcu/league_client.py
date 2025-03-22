@@ -3,9 +3,12 @@ Handles all HTTP request to the local LoL Client,
 providing functions for interacting with various LoL endpoints.
 """
 import threading
+import logging
 
 import requests
 import urllib3
+from time import sleep
+log = logging.getLogger(__name__)
 
 from lolbot.system import cmd
 
@@ -23,7 +26,7 @@ class LeagueClient:
         self.client = requests.Session()
         self.client.verify = False
         self.client.headers.update({'Accept': 'application/json'})
-        self.client.timeout = 2
+        self.client.timeout = 15
         self.client.trust_env = False
         self.timer = None
         self.endpoint = cmd.get_auth_string()

@@ -22,18 +22,6 @@ yarn-error.log*
 /dist
 /build
 *.spec
-
-# Electron specific
-out/
-
-# Environment files
-.env
-.env.*
-!.env.example
-
-# OS specific
-.DS_Store
-Thumbs.db
-
-# Project specific
-/logs
+node_modules
+dist-electron
+dist

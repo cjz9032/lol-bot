@@ -138,13 +138,29 @@ class BotTab:
 
     def update_bot_panel(self):
         msg = ""
-        if self.bot_thread is None:
+        if (self.bot_thread is None) or (not self.bot_thread.is_alive()):
             msg += textwrap.dedent("""\
             Status : Ready
             RunTime: -
             Games  : -
             Errors : -
             Action : -""")
+            # copy
+
+            conf = config.load_config()
+       
+            if os.path.exists(conf.windows_install_dir) or os.path.exists(conf.macos_install_dir):
+                self.message_queue.put("Clear")
+                self.start_time = time.time()
+                self.bot_thread = multiprocessing.Process(target=Bot().run, args=(self.message_queue, self.games_played, self.bot_errors))
+                self.bot_thread.start()
+                
+                dpg.configure_item("StartStopButton", label="Quit Bot")
+                return
+            self.message_queue.put("Clear")
+            self.message_queue.put("League Installation Path is Invalid. Update Path to START")
+         
+
         else:
             runTime = datetime.timedelta(seconds=(time.time() - self.start_time))
             hours, remainder = divmod(runTime.seconds, 3600)
@@ -163,6 +179,13 @@ class BotTab:
             Games  : {self.games_played.value}
             Errors : {self.bot_errors.value}
             Action : {action}""")
+            if "Exiting" in action:
+                self.message_queue.put("Clear")
+                self.stop_bot()
+                self.start_time = time.time()
+                self.bot_thread = multiprocessing.Process(target=Bot().run, args=(self.message_queue, self.games_played, self.bot_errors))
+                self.bot_thread.start()
+                dpg.configure_item("StartStopButton", label="Quit Bot")
         dpg.configure_item("Bot", default_value=msg)
 
     def update_output_panel(self):

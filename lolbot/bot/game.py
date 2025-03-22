@@ -6,6 +6,7 @@ import logging
 import random
 from time import sleep
 from datetime import datetime, timedelta
+import json
 
 from lolbot.lcu.game_server import GameServer, GameServerError
 from lolbot.system import mouse, keys, window, cmd
@@ -17,7 +18,7 @@ LOADING_SCREEN_TIME = 3
 MINION_CLASH_TIME = 85
 GROW_TIME = 600
 FIRST_TOWER_TIME = 700
-MAX_GAME_TIME = 3000
+MAX_GAME_TIME = 2000
 
 # Click coordinates to move/aim
 MINI_MAP_UNDER_TURRET = (0.88, 0.90)
@@ -88,8 +89,28 @@ def wait_for_connection(game_server: GameServer) -> None:
     raise GameError("Game window opened but connection failed")
 
 
+
 def game_loop(game_server: GameServer) -> None:
+    game_time = 0
     server_errors = 0
+    lastGold = 0
+    lastGoldErr = 0
+
+    def detectOffline() -> None:
+        nonlocal lastGold, lastGoldErr, server_errors
+        if game_time > MINION_CLASH_TIME:
+            curGold = int(json.loads(game_server.data)['activePlayer']['currentGold'])
+            if curGold == lastGold:
+                log.info(f"Game State unchanged lastGoldErr {lastGoldErr}")
+                lastGoldErr += 1
+            else:
+                lastGold = curGold
+                lastGoldErr = 0
+        if lastGoldErr == 1:
+            server_errors = MAX_SERVER_ERRORS
+            log.info("Game State unchanged might be crashed")
+            raise GameError("Game State unchanged might be crashed")
+        
     try:
         while True:
             # Don't start new sequence when dead
@@ -101,6 +122,7 @@ def game_loop(game_server: GameServer) -> None:
 
             # Take action based on game time
             game_time = game_server.get_game_time()
+            detectOffline()
             if game_time < LOADING_SCREEN_TIME:
                 loading_screen(game_server)
             elif game_time < MINION_CLASH_TIME:
@@ -157,8 +179,11 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
     sleep(time_to_lane/2)
 
     # Main attack move loop. This sequence attacks and then de-aggros to prevent them from dying 50 times.
+    l_game_time = game_server.get_game_time()
+
     for i in range(60):
-        if game_server.get_summoner_health() < .6:
+        hc = game_server.get_summoner_health()
+        if (l_game_time > FIRST_TOWER_TIME if hc < .1 else hc < .5) or (int(json.loads(game_server.data)['activePlayer']['currentGold']) > 4000):
             keypress('f')
             right_click(retreat)
             sleep(3)
@@ -177,14 +202,14 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
         
     if game_server.summoner_is_dead():
         return
-    if not excited:
-        # Ult and back
-        # attack_click(ULT_DIRECTION)
-        # sleep(1)
-        right_click(MINI_MAP_UNDER_TURRET)
-        sleep(4)
-        keypress('b')
-        sleep(9)
+    # if not excited:
+    # Ult and back
+    # attack_click(ULT_DIRECTION)
+    # sleep(1)
+    right_click(MINI_MAP_UNDER_TURRET)
+    sleep(4)
+    keypress('b')
+    sleep(9)
 
 
 def shop() -> None:
