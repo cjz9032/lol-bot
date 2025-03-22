@@ -1,4 +1,6 @@
 import subprocess
+import os
+import sys
 
 import psutil
 import re
@@ -10,7 +12,7 @@ PORT_REGEX = re.compile(r"--app-port=(\d+)")
 TOKEN_REGEX = re.compile(r"--remoting-auth-token=(\S+)")
 
 # Commands
-LAUNCH_CLIENT = r'"C:\Riot Games\Riot Client\RiotClientServices" --launch-product=league_of_legends --launch-patchline=live'
+LAUNCH_CLIENT = r'"O:\Riot Games\Riot Client\RiotClientServices" --launch-product=league_of_legends --launch-patchline=live'
 
 IS_GAME_RUNNING = 'tasklist | findstr /r /i "\<League of Legends\>"'
 IS_CLIENT_RUNNING = 'tasklist | findstr /i "LeagueClient"'
@@ -22,12 +24,23 @@ CLOSE_LAUNCHER = 'taskkill /F /IM Riot*'
 CLOSE_ALL = f"{CLOSE_LAUNCHER} & {CLOSE_CLIENT}"
 
 
-def run(command: str) -> bool:
+def run(command: str) -> bool:  
+    
     if 'launch' in command:
         subprocess.Popen(command)
         return True
     result = subprocess.run(command, shell=True, text=True, capture_output=True)
     return result.returncode == 0
+
+def restart_program():
+    run(CLOSE_ALL)
+    """重启程序"""
+    print('程序重启...')
+    python = sys.executable
+    os.execl(python, python, *sys.argv)
+    time.sleep(3)
+    # 关闭当前程序
+    sys.exit()
 
 
 def get_auth_string() -> str:

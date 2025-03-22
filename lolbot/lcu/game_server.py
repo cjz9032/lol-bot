@@ -22,7 +22,7 @@ class GameServer:
 
     def update_data(self) -> None:
         try:
-            response = requests.get(GAME_SERVER_URL, timeout=10, verify=False)
+            response = requests.get(GAME_SERVER_URL, timeout=20, verify=False)
             response.raise_for_status()
             self.data = response.text
         except Exception as e:
@@ -86,3 +86,12 @@ class GameServer:
             return current_health / max_health if max_health > 0 else 0
         except (GameServerError, json.JSONDecodeError, KeyError) as e:
             raise GameServerError(f"Failed to get champion health status: {e}")
+
+    def get_summoner_gold(self) -> bool:
+        try:
+            self.update_data()
+            data = json.loads(self.data)
+            currentGold = int(data['activePlayer']['currentGold'])
+            return currentGold
+        except (GameServerError, json.JSONDecodeError, KeyError) as e:
+            raise GameServerError(f"Failed to get champion gold: {e}")

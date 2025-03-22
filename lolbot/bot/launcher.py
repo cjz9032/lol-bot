@@ -23,6 +23,7 @@ class Launcher:
         self.username = ''
         self.password = ''
         self.attempts = 0
+        self.riotAttemps = 0
         self.success = False
 
     def launch_league(self, username: str = '', password: str = ''):
@@ -54,7 +55,11 @@ class Launcher:
                 log.info("Login Successful")
             try:
                 log.info("Launching League from Client")
+                self.riotAttemps += 1
+                if self.riotAttemps == 3:
+                    raise LaunchError("Max launch_league_from_rc from Riot Client attempts exceeded")
                 self.api.launch_league_from_rc()
+              
                 sleep(30)
             except LCUError:
                 pass
@@ -62,7 +67,7 @@ class Launcher:
 
         # Riot Client is opened and Not Logged In
         elif cmd.run(cmd.IS_LAUNCHER_RUNNING):
-            if self.attempts == 5:
+            if self.attempts == 3:
                 raise LaunchError("Max login attempts exceeded. Check username and password")
             elif self.username == "" or self.password == "":
                 raise LaunchError("Username or Password not set")
@@ -82,7 +87,7 @@ class Launcher:
         else:
             log.info("Launching League of Legends")
             cmd.run(cmd.LAUNCH_CLIENT)
-            sleep(30)
+            sleep(50)
 
     def manual_login(self):
         """
