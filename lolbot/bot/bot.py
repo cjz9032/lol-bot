@@ -337,8 +337,9 @@ class Bot:
                 logged = True
             tried += 1
             sleep(3)
-            if tried > 30:
-                raise BotError("Client is patching too long")
+            if tried > 10:
+                # raise BotError("Client is patching too long")
+                break
         log.info("Client is up to date")
 
     def set_game_config(self) -> None:

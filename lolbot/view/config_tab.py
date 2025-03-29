@@ -143,5 +143,5 @@ class ConfigTab:
         self.config.max_level = dpg.get_value(TAG_MAX_LEVEL)
         self.config.fps_type = config.FPS_OPTIONS.get(dpg.get_value(TAG_FPS))
         self.config.cjk_support = dpg.get_value(TAG_CJK_SUPPORT)
-        self.config.font_scale = round(dpg.get_value(TAG_FONT_SCALE), 1)
+        # self.config.font_scale = round(dpg.get_value(TAG_FONT_SCALE), 1)
         config.save_config(self.config)

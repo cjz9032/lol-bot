@@ -57,8 +57,8 @@ FPS_OPTIONS = {
 class Config:
     windows_install_dir: str = "C:/Riot Games/League of Legends"
     macos_install_dir: str = "/Applications/League of Legends.app"
-    lobby: int = 880
-    max_level: int = 30
+    lobby: int = 870
+    max_level: int = 300
     fps_type: int = FPS_OPTIONS.get("60")
     cjk_support: bool = False
     font_scale: float = .7
