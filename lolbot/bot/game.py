@@ -105,6 +105,8 @@ def game_loop(game_server: GameServer) -> None:
                 lastGoldErr += 1
             else:
                 lastGold = curGold
+                log.info(f"Game State changed lastGold {lastGold}")
+
                 lastGoldErr = 0
         if lastGoldErr == 1:
             server_errors = MAX_SERVER_ERRORS
