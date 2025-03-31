@@ -15,7 +15,7 @@ from lolbot.view.about_tab import AboutTab
 from lolbot.lcu.league_client import LeagueClient
 from lolbot.system import RESOLUTION, cmd, OS
 from lolbot.common.config import ICON_PATH
-TIME_RESTART = 7200
+TIME_RESTART = 3600
 
 class MainWindow:
 
