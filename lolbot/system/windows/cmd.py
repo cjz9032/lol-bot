@@ -1,6 +1,7 @@
 import subprocess
 import os
 import sys
+from time import sleep
 
 import psutil
 import re
@@ -39,7 +40,7 @@ def restart_program():
     print('程序重启...')
     python = sys.executable
     os.execl(python, python, *sys.argv)
-    time.sleep(3)
+    sleep(3)
     # 关闭当前程序
     sys.exit()
 
