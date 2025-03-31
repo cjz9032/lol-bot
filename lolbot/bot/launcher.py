@@ -1,14 +1,21 @@
 """
 Handles launching League of Legends and logging into an account.
 """
-
 import logging
 from time import sleep
-
-from lolbot.system import cmd, keys
+from lolbot.system import cmd, keys, mouse, window, OS
 from lolbot.lcu.league_client import LeagueClient, LCUError
+import subprocess
+import os
+from lolbot.common import config
 
 log = logging.getLogger(__name__)
+
+def left_click(ratio: tuple) -> None:
+    coords = window.convert_ratio(ratio, window.TX_LOGIN_WINDOW)
+    mouse.move(coords)
+    mouse.left_click()
+    sleep(0.6)
 
 
 class LaunchError(Exception):
@@ -25,6 +32,7 @@ class Launcher:
         self.attempts = 0
         self.riotAttemps = 0
         self.success = False
+        self.config = config.load_config()
 
     def launch_league(self, username: str = '', password: str = ''):
         self.username = username
@@ -34,6 +42,23 @@ class Launcher:
             if self.success:
                 return
         raise LaunchError("Could not open League. Ensure there are no pending updates.")
+
+
+    def launchWindows(self):
+        login_exe = os.path.join(self.config.windows_install_dir, '../TCLS/client.exe')
+        subprocess.run(login_exe, shell=True, text=True, capture_output=True)
+        sleep(30)
+        # window.bring_to_front(window.TX_LOGIN_WINDOW)
+        # todo check
+        # rat = (arr)=>copy(`(${(arr[0]/1280).toFixed(4)}, ${(arr[1]/768).toFixed(4)})`)
+        left_click((0.8672, 0.4245))
+        sleep(2)
+        left_click((0.8969, 0.7969))
+        sleep(2)
+        left_click((0.8945, 0.7292))
+        sleep(2)
+        left_click((0.7141, 0.8138))
+        sleep(40)
 
     def launch_sequence(self):
         self.api.update_auth()
@@ -86,8 +111,13 @@ class Launcher:
         # Nothing is opened
         else:
             log.info("Launching League of Legends")
-            cmd.run(cmd.LAUNCH_CLIENT)
-            sleep(50)
+            if OS == "Windows":
+                self.launchWindows()
+            else:
+                cmd.run(cmd.LAUNCH_CLIENT)
+                sleep(50)
+
+   
 
     def manual_login(self):
         """

@@ -1,5 +1,8 @@
 import subprocess
 import re
+import os
+import sys
+from time import sleep
 
 # Regex
 LCU_PORT_KEY = "--app-port="
@@ -38,3 +41,14 @@ def get_auth_string() -> str:
     token = token_match.group(1).replace(LCU_TOKEN_KEY, '').replace('"', '') if token_match else ""
 
     return f"https://riot:{token}@127.0.0.1:{port}"
+
+
+def restart_program():
+    run(CLOSE_ALL)
+    """Restart the program"""
+    print('Restarting program...')
+    python = sys.executable
+    os.execl(python, python, *sys.argv)
+    sleep(3)
+    # Close current program
+    sys.exit()

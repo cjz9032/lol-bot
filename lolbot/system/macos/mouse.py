@@ -13,6 +13,10 @@ def left_click(wait = 1):
     pyautogui.leftClick()
     sleep(wait)
 
+def left_db_click(wait=1):
+    pyautogui.doubleClick()
+    sleep(wait)
+
 def right_click(wait = 1):
     pyautogui.rightClick()
     sleep(wait)

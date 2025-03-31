@@ -216,8 +216,9 @@ def shop() -> None:
     """Opens the shop and attempts to purchase items via default shop hotkeys"""
     keypress('p')  # open shop
     # repeat to click one
-    left_click(random.choice(SHOP_ITEM_BUTTONS))
-    left_click(SHOP_PURCHASE_ITEM_BUTTON)
+    for i in range(3):
+        left_db_click(random.choice(SHOP_ITEM_BUTTONS), 0.3)
+        left_click(SHOP_PURCHASE_ITEM_BUTTON, 0.3)
     # keypress('esc')
     left_click(SHOP_CLOSE)
     left_click(SYSTEM_MENU_X_BUTTON)
@@ -234,12 +235,17 @@ def upgrade_abilities() -> None:
         keys.press_and_release(upgrade)
 
 
-def left_click(ratio: tuple) -> None:
+def left_click(ratio: tuple, delay = 0.6) -> None:
     coords = window.convert_ratio(ratio, window.GAME_WINDOW)
     mouse.move(coords)
     mouse.left_click()
-    sleep(0.6)
+    sleep(delay)
 
+def left_db_click(ratio: tuple, delay = 0.6) -> None:
+    coords = window.convert_ratio(ratio, window.GAME_WINDOW)
+    mouse.move(coords)
+    mouse.left_db_click()
+    sleep(delay)
 
 def right_click(ratio: tuple) -> None:
     coords = window.convert_ratio(ratio, window.GAME_WINDOW)

@@ -13,9 +13,9 @@ from lolbot.view.http_tab import HTTPTab
 from lolbot.view.logs_tab import LogsTab
 from lolbot.view.about_tab import AboutTab
 from lolbot.lcu.league_client import LeagueClient
-from lolbot.system import RESOLUTION
+from lolbot.system import RESOLUTION, cmd
 from lolbot.common.config import ICON_PATH
-
+TIME_RESTART = 250
 
 class MainWindow:
 
@@ -32,6 +32,7 @@ class MainWindow:
         self.logs_tab = LogsTab()
         self.about_tab = AboutTab()
         self.api.update_auth_timer()
+        self.start_time = time.time()
 
     def show(self) -> None:
         with dpg.window(label='', tag='primary window', width=self.width, height=self.height, no_move=True, no_resize=True, no_title_bar=True):
@@ -61,6 +62,11 @@ class MainWindow:
                 self.bot_tab.update_info_panel()
                 self.bot_tab.update_output_panel()
                 panel_update_time = current_time
+            # Check if 3 hours have passed
+            if current_time - self.start_time >= TIME_RESTART:
+                self.bot_tab.stop_bot()
+                cmd.restart_program()
+                break
             dpg.render_dearpygui_frame()
         dpg.destroy_context()
 

@@ -12,16 +12,17 @@ PORT_REGEX = re.compile(r"--app-port=(\d+)")
 TOKEN_REGEX = re.compile(r"--remoting-auth-token=(\S+)")
 
 # Commands
-LAUNCH_CLIENT = r'"O:\Riot Games\Riot Client\RiotClientServices" --launch-product=league_of_legends --launch-patchline=live'
+LAUNCH_CLIENT = r'"C:\Riot Games\Riot Client\RiotClientServices" --launch-product=league_of_legends --launch-patchline=live'
 
 IS_GAME_RUNNING = 'tasklist | findstr /r /i "\<League of Legends\>"'
 IS_CLIENT_RUNNING = 'tasklist | findstr /i "LeagueClient"'
 IS_LAUNCHER_RUNNING = 'tasklist | findstr /i "Riot"'
-
+IS_LOGIN_RUNNING = 'tasklist | findstr /r /i "\<Client\.exe\>"'
 CLOSE_GAME = 'taskkill /F /IM "League of Legends.exe"'
+CLOSE_LOGIN = 'taskkill /F /IM "Client.exe"'
 CLOSE_CLIENT = 'taskkill /F /IM League*'
 CLOSE_LAUNCHER = 'taskkill /F /IM Riot*'
-CLOSE_ALL = f"{CLOSE_LAUNCHER} & {CLOSE_CLIENT}"
+CLOSE_ALL = f"{CLOSE_LAUNCHER} & {CLOSE_CLIENT} & {CLOSE_LOGIN}"
 
 
 def run(command: str) -> bool:  

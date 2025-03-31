@@ -13,6 +13,10 @@ def left_click(wait=1):
     mouse.click()
     sleep(wait)
 
+def left_db_click(wait=1):
+    mouse.double_click()
+    sleep(wait)
+
 def right_click(wait=1):
     mouse.right_click()
     sleep(wait)
