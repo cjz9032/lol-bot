@@ -17,6 +17,6 @@ for /f "tokens=2 delims=," %%A in (
 start "" powershell -NoExit -Command "cd \""%~dp0\"\"; python.exe .\main.pyw"
 
 :: 4. 等待 3600 秒
-timeout /t 36 /nobreak >nul
+timeout /t 7200 /nobreak >nul
 
 goto loop
