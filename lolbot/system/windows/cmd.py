@@ -34,15 +34,15 @@ def run(command: str) -> bool:
     result = subprocess.run(command, shell=True, text=True, capture_output=True)
     return result.returncode == 0
 
-def restart_program():
-    run(CLOSE_ALL)
-    """重启程序"""
-    print('程序重启...')
-    python = sys.executable
-    os.execl(python, python, *sys.argv)
-    sleep(3)
-    # 关闭当前程序
-    sys.exit()
+# def restart_program():
+#     run(CLOSE_ALL)
+#     """重启程序"""
+#     print('程序重启...')
+#     python = sys.executable
+#     os.execl(python, python, *sys.argv)
+#     sleep(3)
+#     # 关闭当前程序
+#     sys.exit()
 
 
 def get_auth_string() -> str:
