@@ -159,15 +159,19 @@ class Bot:
         try:
             self.api.start_matchmaking()
             sleep(1)
-        except LCUError:
-            return
-
+        except LCUError as e:
+            log.warning("Starting queue failed")
+            log.warning(e)
+        
         # Wait out dodge timer
         try:
             time_remaining = self.api.get_dodge_timer()
             if time_remaining > 0:
                 log.info(f"Dodge Timer. Time Remaining: {time_remaining}")
-                sleep(time_remaining)
+                cmd.run(cmd.CLOSE_ALL)
+                sleep(time_remaining + 120)
+                log.error("Dodge Timer reached. Exiting")
+                sys.exit()
         except LCUError:
             return
 

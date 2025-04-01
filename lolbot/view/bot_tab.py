@@ -17,7 +17,7 @@ from lolbot.lcu.league_client import LeagueClient, LCUError
 from lolbot.lcu import game_server
 from lolbot.bot.bot import Bot
 from lolbot.system import RESOLUTION, cmd, OS
-TIME_RESTART = 36
+TIME_RESTART = 7200
 
 
 class BotTab:
