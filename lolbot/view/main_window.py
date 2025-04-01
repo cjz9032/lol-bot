@@ -15,7 +15,6 @@ from lolbot.view.about_tab import AboutTab
 from lolbot.lcu.league_client import LeagueClient
 from lolbot.system import RESOLUTION, cmd, OS
 from lolbot.common.config import ICON_PATH
-TIME_RESTART = 3600
 
 class MainWindow:
 
@@ -62,11 +61,6 @@ class MainWindow:
                 self.bot_tab.update_info_panel()
                 self.bot_tab.update_output_panel()
                 panel_update_time = current_time
-            # Check if 3 hours have passed
-            if OS != 'Windows' and current_time - self.start_time >= TIME_RESTART:
-                self.bot_tab.stop_bot()
-                cmd.restart_program()
-                break
             dpg.render_dearpygui_frame()
         dpg.destroy_context()
 

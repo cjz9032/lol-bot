@@ -16,6 +16,8 @@ from lolbot.system import cmd
 from lolbot.lcu.league_client import LeagueClient, LCUError
 from lolbot.lcu import game_server
 from lolbot.bot.bot import Bot
+from lolbot.system import RESOLUTION, cmd, OS
+TIME_RESTART = 36
 
 
 class BotTab:
@@ -31,6 +33,7 @@ class BotTab:
         self.endpoint = None
         self.bot_thread = None
         self.start_time = None
+        self.app_start = time.time()
 
     def create_tab(self, parent) -> None:
         with dpg.tab(label="Bot", parent=parent) as self.status_tab:
@@ -90,6 +93,11 @@ class BotTab:
         self.message_queue.put('Closing League Processes')
         threading.Thread(target=cmd.run, args=(cmd.CLOSE_ALL,)).start()
 
+    def restartAll(self) -> None:
+        if time.time() - self.app_start >= TIME_RESTART:
+            self.stop_bot()
+            cmd.restart_program()
+
     def update_info_panel(self) -> None:
         if not cmd.run(cmd.IS_CLIENT_RUNNING):
             msg = textwrap.dedent("""\
@@ -99,6 +107,7 @@ class BotTab:
             Time : -
             Champ: -""")
             dpg.configure_item("Info", default_value=msg)
+            self.restartAll()
             return
         try:
             phase = self.api.get_phase()
@@ -107,6 +116,7 @@ class BotTab:
             match phase:
                 case "None":
                     phase = "In Main Menu"
+                    self.restartAll()
                 case "Matchmaking":
                     phase = "In Queue"
                     game_time = self.api.get_matchmaking_time()
@@ -120,6 +130,7 @@ class BotTab:
                 case "InProgress":
                     phase = "In Game"
                     try:
+                        self.restartAll()
                         game_time = self.game_server.get_formatted_time()
                         champ = self.game_server.get_champ()
                     except:
