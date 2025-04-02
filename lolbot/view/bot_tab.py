@@ -17,8 +17,11 @@ from lolbot.lcu.league_client import LeagueClient, LCUError
 from lolbot.lcu import game_server
 from lolbot.bot.bot import Bot
 from lolbot.system import RESOLUTION, cmd, OS
-TIME_RESTART = 7200
-
+TIME_RESTART = 0
+if OS != "Windows":
+    TIME_RESTART = 7200
+else:
+    TIME_RESTART = 18000
 
 class BotTab:
     """Class that displays the BotTab and handles bot controls/output"""
@@ -191,6 +194,7 @@ class BotTab:
             Errors : {self.bot_errors.value}
             Action : {action}""")
             if "Exiting" in action:
+                self.close_client()
                 self.message_queue.put("Clear")
                 self.stop_bot()
                 self.start_time = time.time()

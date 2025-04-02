@@ -3,6 +3,9 @@ import re
 import os
 import sys
 from time import sleep
+import logging
+
+log = logging.getLogger(__name__)
 
 # Regex
 LCU_PORT_KEY = "--app-port="
@@ -46,7 +49,7 @@ def get_auth_string() -> str:
 def restart_program():
     run(CLOSE_ALL)
     """Restart the program"""
-    print('Restarting program...')
+    log.info('restart...')
     python = sys.executable
     os.execl(python, python, *sys.argv)
     sleep(3)

@@ -59,7 +59,7 @@ class Config:
     macos_install_dir: str = "/Applications/League of Legends.app"
     lobby: int = 870
     max_level: int = 300
-    fps_type: int = FPS_OPTIONS.get("60")
+    fps_type: int = FPS_OPTIONS.get("25")
     cjk_support: bool = False
     font_scale: float = .7
 

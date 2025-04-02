@@ -2,9 +2,10 @@ import subprocess
 import os
 import sys
 from time import sleep
-
+import logging
 import psutil
 import re
+log = logging.getLogger(__name__)
 
 # Regex
 LCU_PORT_KEY = "--app-port="
@@ -23,7 +24,8 @@ CLOSE_GAME = 'taskkill /F /IM "League of Legends.exe"'
 CLOSE_LOGIN = 'taskkill /F /IM "Client.exe"'
 CLOSE_CLIENT = 'taskkill /F /IM League*'
 CLOSE_LAUNCHER = 'taskkill /F /IM Riot*'
-CLOSE_ALL = f"{CLOSE_LAUNCHER} & {CLOSE_CLIENT} & {CLOSE_LOGIN}"
+CLOSE_QQ = 'taskkill /F /IM qq.exe'
+CLOSE_ALL = f"{CLOSE_LAUNCHER} & {CLOSE_CLIENT} & {CLOSE_LOGIN} & CLOSE_QQ"
 
 
 def run(command: str) -> bool:  
@@ -37,7 +39,7 @@ def run(command: str) -> bool:
 def restart_program():
     run(CLOSE_ALL)
     """重启程序"""
-    print('程序重启...')
+    log.info('restart...')
     python = sys.executable
     os.execl(python, python, *sys.argv)
     sleep(3)

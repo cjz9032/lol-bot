@@ -27,6 +27,7 @@ POPUP_SEND_EMAIL_X_RATIO = (0.6960, 0.1238)
 
 # Errors
 MAX_BOT_ERRORS = 3
+# MAX_LAUNCH_ERRORS = 3
 MAX_PHASE_ERRORS = 10
 
 
@@ -49,6 +50,7 @@ class Bot:
         self.prev_phase = None
         self.bot_errors = 0
         self.phase_errors = 0
+        # self.launch_errors = 0
 
     def run(self, message_queue: mp.Queue, games: mp.Value, errors: mp.Value) -> None:
         """Main loop, gets an account, launches league, monitors account level, and repeats."""
@@ -65,6 +67,7 @@ class Bot:
                 self.leveling_loop(games)
                 cmd.run(cmd.CLOSE_ALL)
                 self.bot_errors = 0
+                # self.launch_errors = 0
                 self.phase_errors = 0
             except BotError as be:
                 log.error(be)
@@ -78,11 +81,13 @@ class Bot:
                 else:
                     cmd.run(cmd.CLOSE_ALL)
             except launcher.LaunchError as le:
+                cmd.run(cmd.CLOSE_ALL)
                 log.error(le)
                 log.error("Launcher Error. Exiting")
                 return
             except Exception as e:
                 log.error(e)
+                cmd.run(cmd.CLOSE_ALL)
                 if traceback.format_exc() is not None:
                     log.error(traceback.format_exc())
                 log.error("Unknown Error. Exiting")

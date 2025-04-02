@@ -37,7 +37,7 @@ class Launcher:
     def launch_league(self, username: str = '', password: str = ''):
         self.username = username
         self.password = password
-        for i in range(30):
+        for i in range(3):
             self.launch_sequence()
             if self.success:
                 return
@@ -45,8 +45,14 @@ class Launcher:
 
 
     def launchWindows(self):
+        # prepare QQ
+        log.info("qq")
+        subprocess.Popen("C:\Program Files\Tencent\QQNT\QQ.exe", shell=True)
+        log.info("qq after")
+        sleep(10)
+        keys.press_and_release('enter')
         login_exe = os.path.join(self.config.windows_install_dir, '../TCLS/client.exe')
-        subprocess.run(login_exe, shell=True, text=True, capture_output=True)
+        subprocess.Popen(login_exe, shell=True)
         sleep(30)
         # window.bring_to_front(window.TX_LOGIN_WINDOW)
         # todo check
@@ -58,6 +64,8 @@ class Launcher:
         left_click((0.8945, 0.7292))
         sleep(2)
         left_click((0.7141, 0.8138))
+        sleep(10)
+        cmd.run(cmd.CLOSE_QQ)
         sleep(40)
 
     def launch_sequence(self):
