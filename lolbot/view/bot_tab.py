@@ -6,8 +6,9 @@ import multiprocessing
 import os.path
 import threading
 import time
-import datetime
+from datetime import datetime, timedelta
 import textwrap
+import requests
 
 import dearpygui.dearpygui as dpg
 
@@ -17,11 +18,18 @@ from lolbot.lcu.league_client import LeagueClient, LCUError
 from lolbot.lcu import game_server
 from lolbot.bot.bot import Bot
 from lolbot.system import RESOLUTION, cmd, OS
+import logging
+from time import sleep
+
+log = logging.getLogger(__name__)
+
 TIME_RESTART = 0
 if OS != "Windows":
     TIME_RESTART = 7200
 else:
-    TIME_RESTART = 18000
+    TIME_RESTART = 10086
+    
+MAX_ACCEPT_LOOP = 70
 
 class BotTab:
     """Class that displays the BotTab and handles bot controls/output"""
@@ -96,10 +104,59 @@ class BotTab:
         self.message_queue.put('Closing League Processes')
         threading.Thread(target=cmd.run, args=(cmd.CLOSE_ALL,)).start()
 
-    def restartAll(self) -> None:
+    def restart_program_throttled(self) -> None:
         if time.time() - self.app_start >= TIME_RESTART:
-            self.stop_bot()
-            cmd.restart_program()
+            self.restart_program()
+
+    def restart_program(self) -> None:
+        self.stop_bot()
+        cmd.restart_program()
+
+
+    def reset_match_time(self) -> None:
+        try:
+            with open(config.ACCEPT_PATH, "w") as f:
+                f.write("")
+        except Exception as e:
+            log.error(f"Failed to reset match time: {e}")
+
+
+    def get_last_match_time(self) -> datetime:
+        try:
+            with open(config.ACCEPT_PATH, "r") as f:
+                last_time_str = f.readline().strip()
+                if last_time_str != "":
+                    log.info(f"last match time {last_time_str}")
+                    return datetime.strptime(last_time_str, "%Y-%m-%d %H:%M:%S")
+                else:
+                    log.info(f"last match time none")
+        except FileNotFoundError:
+            return None
+        except Exception as e:
+            log.error(f"Failed to read match time: {e}")
+            return None
+
+    def check_broken(self) -> None:
+        log.info("check broken")
+        print("check broken")
+        last_time = self.get_last_match_time()
+        if last_time is not None:
+            if datetime.now() - last_time > timedelta(minutes=MAX_ACCEPT_LOOP):
+                print("push and restart")
+                log.info("push and restart")
+                self.xiapush()
+                self.reset_match_time()
+                sleep(3)
+                self.restart_program()
+        return None
+
+    def xiapush(self) -> None:
+        try:
+            with open(config.MID_PATH, "r") as f:
+                mid = f.readline().strip()
+                requests.get(f"https://www.pushplus.plus/send?token=513c57c01734486086a393226c97c55d&title={mid}&content=hang&template=txt")
+        except Exception as e:
+            log.error(f"Failed to read mid: {e}")
 
     def update_info_panel(self) -> None:
         if not cmd.run(cmd.IS_CLIENT_RUNNING):
@@ -110,7 +167,7 @@ class BotTab:
             Time : -
             Champ: -""")
             dpg.configure_item("Info", default_value=msg)
-            self.restartAll()
+            self.restart_program_throttled()
             return
         try:
             phase = self.api.get_phase()
@@ -119,7 +176,7 @@ class BotTab:
             match phase:
                 case "None":
                     phase = "In Main Menu"
-                    self.restartAll()
+                    self.restart_program_throttled()
                 case "Matchmaking":
                     phase = "In Queue"
                     game_time = self.api.get_matchmaking_time()
@@ -133,7 +190,7 @@ class BotTab:
                 case "InProgress":
                     phase = "In Game"
                     try:
-                        self.restartAll()
+                        self.restart_program_throttled()
                         game_time = self.game_server.get_formatted_time()
                         champ = self.game_server.get_champ()
                     except:
@@ -176,7 +233,7 @@ class BotTab:
          
 
         else:
-            run_time = datetime.timedelta(seconds=(time.time() - self.start_time))
+            run_time = timedelta(seconds=(time.time() - self.start_time))
             hours, remainder = divmod(run_time.seconds, 3600)
             minutes, seconds = divmod(remainder, 60)
             if run_time.days > 0:
@@ -216,7 +273,7 @@ class BotTab:
                     display_msg = ""
                     break
                 elif "INFO" not in msg and "ERROR" not in msg and "WARNING" not in msg:
-                    display_msg += f'[{datetime.datetime.now().strftime("%H:%M:%S")}] [INFO   ] {msg}\n'
+                    display_msg += f'[{datetime.now().strftime("%H:%M:%S")}] [INFO   ] {msg}\n'
                 else:
                     display_msg += msg + "\n"
             if "Bot Successfully Terminated" in display_msg:

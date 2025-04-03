@@ -202,8 +202,17 @@ class Bot:
             if self.prev_phase != "ReadyCheck":
                 log.info("Accepting Match")
             self.api.accept_match()
+            # record the time at this point
+            current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self.save_match_time(current_time)
         except LCUError:
             pass
+    def save_match_time(self, time_str: str) -> None:
+        try:
+            with open(config.ACCEPT_PATH, "w") as f:
+                f.write(f"{time_str}")
+        except Exception as e:
+            log.error(f"Failed to save match time: {e}")
 
     def champ_select(self) -> None:
         """Handles the Champ Select Lobby."""

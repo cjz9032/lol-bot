@@ -48,14 +48,13 @@ class Launcher:
         # prepare QQ
         log.info("qq")
         subprocess.Popen("C:\Program Files\Tencent\QQNT\QQ.exe", shell=True)
-        log.info("qq after")
-        sleep(10)
+        sleep(6)
         keys.press_and_release('enter')
         login_exe = os.path.join(self.config.windows_install_dir, '../TCLS/client.exe')
         subprocess.Popen(login_exe, shell=True)
-        sleep(30)
+        sleep(20)
         # window.bring_to_front(window.TX_LOGIN_WINDOW)
-        # todo check
+        # todo improve check
         # rat = (arr)=>copy(`(${(arr[0]/1280).toFixed(4)}, ${(arr[1]/768).toFixed(4)})`)
         left_click((0.8672, 0.4245))
         sleep(2)
@@ -66,7 +65,7 @@ class Launcher:
         left_click((0.7141, 0.8138))
         sleep(10)
         cmd.run(cmd.CLOSE_QQ)
-        sleep(40)
+        sleep(30)
 
     def launch_sequence(self):
         self.api.update_auth()

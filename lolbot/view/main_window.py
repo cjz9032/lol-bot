@@ -16,6 +16,8 @@ from lolbot.lcu.league_client import LeagueClient
 from lolbot.system import RESOLUTION, cmd, OS
 from lolbot.common.config import ICON_PATH
 
+CHECK_INTERNAL_MIN = 300
+
 class MainWindow:
 
     def __init__(self) -> None:
@@ -32,6 +34,7 @@ class MainWindow:
         self.about_tab = AboutTab()
         self.api.update_auth_timer()
         self.start_time = time.time()
+        self.lastCheckBroken = time.time()
 
     def show(self) -> None:
         with dpg.window(label='', tag='primary window', width=self.width, height=self.height, no_move=True, no_resize=True, no_title_bar=True):
@@ -56,6 +59,9 @@ class MainWindow:
         panel_update_time = time.time()
         while dpg.is_dearpygui_running():
             current_time = time.time()
+            if current_time - self.lastCheckBroken >= CHECK_INTERNAL_MIN:
+                self.lastCheckBroken = current_time
+                self.bot_tab.check_broken()
             if current_time - panel_update_time >= 0.3:
                 self.bot_tab.update_bot_panel()
                 self.bot_tab.update_info_panel()

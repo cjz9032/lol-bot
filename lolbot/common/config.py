@@ -15,6 +15,9 @@ ACCOUNT_PATH = os.path.join(CONFIG_DIR, 'accounts.json')
 ICON_PATH = 'assets/logo.ico'
 FONT_PATH = 'assets/fonts/NotoSansMonoCJK-VF.otf.ttc'
 
+ACCEPT_PATH = os.path.join(CONFIG_DIR, 'accept-time.txt')
+MID_PATH = os.path.join(CONFIG_DIR, 'mid.txt')
+
 os.makedirs(CONFIG_DIR, exist_ok=True)
 os.makedirs(BAK_DIR, exist_ok=True)
 os.makedirs(LOG_DIR, exist_ok=True)
@@ -65,6 +68,10 @@ class Config:
 
 
 def load_config() -> Config:
+    if not os.path.exists(MID_PATH):
+        with open(MID_PATH, 'w') as mid_file:
+            mid_file.write('default')
+
     if not os.path.exists(CONFIG_PATH):
         default_config = Config()
         save_config(default_config)
