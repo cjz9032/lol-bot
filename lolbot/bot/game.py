@@ -199,7 +199,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
         # sleep(1)
         # keypress('w')
         keypress('q')
-        for i in range(1, 7):
+        for i in range(1, 8):
             keypress(str(i), 0.1)
         keypress('r')
         
