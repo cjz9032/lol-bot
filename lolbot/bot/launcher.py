@@ -85,10 +85,10 @@ class Launcher:
         sleep(5)
 
         # go
-        # mouse.move((1155,830))
         window.bring_to_front(window.WG_LOGIN_WINDOW)
-        coords = window.convert_ratio((0.96,0.96), window.WG_LOGIN_WINDOW)
-        mouse.move(coords)
+        mouse.move((1155,830)) # something does not work
+        # coords = window.convert_ratio((0.96,0.96), window.WG_LOGIN_WINDOW)
+        # mouse.move(coords)
 
         sleep(1)
         mouse.left_db_click()
