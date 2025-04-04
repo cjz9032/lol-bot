@@ -7,6 +7,7 @@ from win32gui import FindWindow, GetWindowRect, SetForegroundWindow
 GAME_WINDOW = "League of Legends (TM) Client"
 CLIENT_WINDOW = "League of Legends"
 TX_LOGIN_WINDOW = "英雄联盟登录程序"
+WG_LOGIN_WINDOW = "WeGame"
 
 
 class WindowNotFound(Exception):
@@ -18,10 +19,10 @@ def check_window_exists(window_name: str):
         raise WindowNotFound
     return True
 
-# def bring_to_front(window_title):
-#     hwnd = FindWindow(None, window_title)
-#     if hwnd:
-#         SetForegroundWindow(hwnd)
+def bring_to_front(window_title):
+    hwnd = FindWindow(None, window_title)
+    if hwnd:
+        SetForegroundWindow(hwnd)
 
 def get_window_size(window_name: str):
     """Gets the size of an open window"""

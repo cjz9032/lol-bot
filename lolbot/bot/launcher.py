@@ -77,11 +77,19 @@ class Launcher:
         # sleep(10)
         # cmd.run(cmd.CLOSE_QQ)
         # sleep(30)
+
+        # wegame tray
         sleep(10)
         mouse.move((1117,938))
         mouse.left_db_click()
         sleep(5)
-        mouse.move((1155,830))
+
+        # go
+        # mouse.move((1155,830))
+        window.bring_to_front(window.WG_LOGIN_WINDOW)
+        coords = window.convert_ratio((0.96,0.96), window.WG_LOGIN_WINDOW)
+        mouse.move(coords)
+
         sleep(1)
         mouse.left_db_click()
         sleep(1)
