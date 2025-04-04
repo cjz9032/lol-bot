@@ -183,7 +183,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
     # Main attack move loop. This sequence attacks and then de-aggros to prevent them from dying 50 times.
     l_game_time = game_server.get_game_time()
 
-    for i in range(60):
+    for i in range(50):
         hc = game_server.get_summoner_health()
         if (l_game_time > FIRST_TOWER_TIME if hc < .1 else hc < .5) or (int(json.loads(game_server.data)['activePlayer']['currentGold']) > 4000):
             keypress('f')
@@ -238,23 +238,23 @@ def upgrade_abilities() -> None:
         keys.press_and_release(upgrade)
 
 
-def left_click(ratio: tuple, delay = 0.6) -> None:
+def left_click(ratio: tuple, delay = 0.3) -> None:
     coords = window.convert_ratio(ratio, window.GAME_WINDOW)
     mouse.move(coords)
     mouse.left_click()
     sleep(delay)
 
-def left_db_click(ratio: tuple, delay = 0.6) -> None:
+def left_db_click(ratio: tuple, delay = 0.3) -> None:
     coords = window.convert_ratio(ratio, window.GAME_WINDOW)
     mouse.move(coords)
     mouse.left_db_click()
     sleep(delay)
 
-def right_click(ratio: tuple) -> None:
+def right_click(ratio: tuple, delay = 0.3) -> None:
     coords = window.convert_ratio(ratio, window.GAME_WINDOW)
     mouse.move(coords)
     mouse.right_click()
-    sleep(0.6)
+    sleep(delay)
 
 
 def attack_click(ratio: tuple) -> None:
@@ -269,7 +269,7 @@ def attack_click(ratio: tuple) -> None:
     sleep(.6)
 
 
-def keypress(key: str, delay = 0.6) -> None:
+def keypress(key: str, delay = 0.3) -> None:
     window.check_window_exists(window.GAME_WINDOW)
     keys.press_and_release(key)
     sleep(delay)
