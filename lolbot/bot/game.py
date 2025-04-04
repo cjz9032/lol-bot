@@ -199,7 +199,8 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
         # sleep(1)
         # keypress('w')
         keypress('q')
-        # for i in range(1):
+        for i in range(1, 7):
+            keypress(str(i), 0.1)
         keypress('r')
         
     if game_server.summoner_is_dead():
@@ -268,7 +269,7 @@ def attack_click(ratio: tuple) -> None:
     sleep(.6)
 
 
-def keypress(key: str) -> None:
+def keypress(key: str, delay = 0.6) -> None:
     window.check_window_exists(window.GAME_WINDOW)
     keys.press_and_release(key)
-    sleep(0.6)
+    sleep(delay)
