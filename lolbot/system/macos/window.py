@@ -2,6 +2,7 @@ from Quartz import CGWindowListCopyWindowInfo, kCGWindowListOptionAll, kCGNullWi
 
 GAME_WINDOW = 'League Of Legends'
 CLIENT_WINDOW = 'League of Legends'
+SPEED_WINDOW = 'UU 加速器'
 
 
 class WindowNotFound(Exception):

@@ -43,6 +43,15 @@ class Launcher:
                 return
         raise LaunchError("Could not open League. Ensure there are no pending updates.")
 
+    def launchMac(self):
+        cmd.run(cmd.LAUNCH_SPEEED)
+        sleep(6)
+        coords = window.convert_ratio((0.35,0.5), window.SPEED_WINDOW)
+        mouse.move(coords)
+        mouse.left_click()
+        sleep(10)
+        cmd.run(cmd.LAUNCH_CLIENT)
+        sleep(50)
 
     def launchWindows(self):
         # prepare QQ
@@ -134,10 +143,7 @@ class Launcher:
             if OS == "Windows":
                 self.launchWindows()
             else:
-                cmd.run(cmd.LAUNCH_CLIENT)
-                sleep(50)
-
-   
+                self.launchMac()
 
     def manual_login(self):
         """

@@ -25,7 +25,7 @@ log = logging.getLogger(__name__)
 
 TIME_RESTART = 0
 if OS != "Windows":
-    TIME_RESTART = 7200
+    TIME_RESTART = 10086
 else:
     TIME_RESTART = 10086
     

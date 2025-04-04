@@ -15,6 +15,7 @@ TOKEN_REGEX = re.compile(r"--remoting-auth-token=(\S+)")
 
 # Commands
 LAUNCH_CLIENT = 'open "/Applications/League of Legends.app"'
+LAUNCH_SPEEED = 'open "/Applications/UUBooster.app"'
 
 IS_GAME_RUNNING = 'pgrep -fl "LeagueOfLegends.app"'
 IS_CLIENT_RUNNING = 'pgrep -fl "LeagueClient" | grep -v "Riot"'
@@ -23,7 +24,8 @@ IS_LAUNCHER_RUNNING = 'pgrep -fl "Riot"'
 CLOSE_GAME = 'kill -9 $(pgrep -f "LeagueOfLegends.app")'
 CLOSE_CLIENT = 'kill -9 $(pgrep -f "LeagueClient")'
 CLOSE_LAUNCHER = 'kill -9 $(pgrep -f "Riot")'
-CLOSE_ALL = 'kill -9 $(pgrep -f "League");' + CLOSE_LAUNCHER
+CLOSE_SPEED = 'kill -9 $(pgrep -f "UUBooster.app")'
+CLOSE_ALL = 'kill -9 $(pgrep -f "League");' + CLOSE_LAUNCHER + ';' + CLOSE_SPEED
 
 
 def run(command: str) -> bool:
