@@ -11,11 +11,11 @@ from lolbot.common import config
 
 log = logging.getLogger(__name__)
 
-def left_click(ratio: tuple) -> None:
-    coords = window.convert_ratio(ratio, window.TX_LOGIN_WINDOW)
-    mouse.move(coords)
-    mouse.left_click()
-    sleep(0.6)
+# def left_click(ratio: tuple) -> None:
+#     coords = window.convert_ratio(ratio, window.TX_LOGIN_WINDOW)
+#     mouse.move(coords)
+#     mouse.left_click()
+#     sleep(0.6)
 
 
 class LaunchError(Exception):
@@ -46,26 +46,39 @@ class Launcher:
 
     def launchWindows(self):
         # prepare QQ
-        log.info("qq")
-        subprocess.Popen("C:\Program Files\Tencent\QQNT\QQ.exe", shell=True)
-        sleep(6)
-        keys.press_and_release('enter')
-        login_exe = os.path.join(self.config.windows_install_dir, '../TCLS/client.exe')
-        subprocess.Popen(login_exe, shell=True)
-        sleep(20)
+        # log.info("qq")
+        # subprocess.Popen("C:\Program Files\Tencent\QQNT\QQ.exe", shell=True)
+        # sleep(6)
+        # keys.press_and_release('enter')
+        # login_exe = os.path.join(self.config.windows_install_dir, '../TCLS/client.exe')
+        # subprocess.Popen(login_exe, shell=True)
+        # sleep(20)
+
         # window.bring_to_front(window.TX_LOGIN_WINDOW)
         # todo improve check
-        # rat = (arr)=>copy(`(${(arr[0]/1280).toFixed(4)}, ${(arr[1]/768).toFixed(4)})`)
-        left_click((0.8672, 0.4245))
-        sleep(2)
-        left_click((0.8969, 0.7969))
-        sleep(2)
-        left_click((0.8945, 0.7292))
-        sleep(2)
-        left_click((0.7141, 0.8138))
+        # # rat = (arr)=>copy(`(${(arr[0]/1280).toFixed(4)}, ${(arr[1]/768).toFixed(4)})`)
+
+        # left_click((0.8672, 0.4245))
+        # sleep(2)
+        # left_click((0.8969, 0.7969))
+        # sleep(2)
+        # left_click((0.8945, 0.7292))
+        # sleep(2)
+        # left_click((0.7141, 0.8138))
+        # sleep(10)
+        # cmd.run(cmd.CLOSE_QQ)
+        # sleep(30)
         sleep(10)
-        cmd.run(cmd.CLOSE_QQ)
-        sleep(30)
+        mouse.move((1117,938))
+        mouse.left_db_click()
+        sleep(5)
+        mouse.move((1155,830))
+        sleep(1)
+        mouse.left_db_click()
+        sleep(1)
+        mouse.left_db_click()
+        sleep(40)
+
 
     def launch_sequence(self):
         self.api.update_auth()
