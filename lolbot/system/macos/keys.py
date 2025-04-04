@@ -40,14 +40,14 @@ def press_and_release(key: str):
                 keyboard.press(KeyCode.from_vk(21))
                 keyboard.release(KeyCode.from_vk(21))
         case '5':
-                keyboard.press(KeyCode.from_vk(23))
-                keyboard.release(KeyCode.from_vk(23))
-        case '6':
                 keyboard.press(KeyCode.from_vk(22))
                 keyboard.release(KeyCode.from_vk(22))
-        case '7':
+        case '6':
                 keyboard.press(KeyCode.from_vk(23))
                 keyboard.release(KeyCode.from_vk(23))
+        case '7':
+                keyboard.press(KeyCode.from_vk(24))
+                keyboard.release(KeyCode.from_vk(24))
         case 'tab':
             keyboard.press(Key.tab)
             keyboard.release(Key.tab)
