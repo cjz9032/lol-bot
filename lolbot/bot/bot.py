@@ -22,7 +22,7 @@ log = logging.getLogger(__name__)
 
 # Click Ratios
 POST_GAME_OK_RATIO = (0.4996, 0.9397)
-POST_GAME_SELECT_CHAMP_RATIO = (0.4977, 0.5333)
+# POST_GAME_SELECT_CHAMP_RATIO = (0.3977, 0.4333)
 POPUP_SEND_EMAIL_X_RATIO = (0.6960, 0.1238)
 
 # Errors
@@ -285,14 +285,15 @@ class Bot:
         log.info("Honoring teammates and accepting rewards")
         sleep(10)
         popup_x_coords = window.convert_ratio(POPUP_SEND_EMAIL_X_RATIO, window.CLIENT_WINDOW)
-        select_champ_coords = window.convert_ratio(POST_GAME_SELECT_CHAMP_RATIO, window.CLIENT_WINDOW)
         ok_button_coords = window.convert_ratio(POST_GAME_OK_RATIO, window.CLIENT_WINDOW)
         try:
             mouse.move_and_click(popup_x_coords)
             if not self.honor_player():
                 sleep(60)  # Honor failed for some reason, wait out the honor screen
             mouse.move_and_click(popup_x_coords)
+            tuples_list = [(0.24, 0.4), (0.42, 0.4), (0.6, 0.4)]
             for i in range(3):
+                select_champ_coords = window.convert_ratio(tuples_list[i], window.CLIENT_WINDOW)
                 mouse.move_and_click(select_champ_coords)
                 mouse.move_and_click(ok_button_coords)
             mouse.move_and_click(popup_x_coords)
