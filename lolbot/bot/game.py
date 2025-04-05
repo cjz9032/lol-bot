@@ -158,7 +158,6 @@ def game_start(game_server: GameServer) -> None:
     """Buys starter items and waits for minions to clash (minions clash at 90 seconds)"""
     log.info("Waiting for Minion Clash")
     sleep(10)
-    shop()
     keypress('y')  # lock screen
     upgrade_abilities()
 
@@ -219,7 +218,7 @@ def shop() -> None:
     """Opens the shop and attempts to purchase items via default shop hotkeys"""
     keypress('p')  # open shop
     # repeat to click one
-    for i in range(3):
+    for i in range(2):
         left_db_click(random.choice(SHOP_ITEM_BUTTONS), 0.3)
         left_click(SHOP_PURCHASE_ITEM_BUTTON, 0.3)
     # keypress('esc')

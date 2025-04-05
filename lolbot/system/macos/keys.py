@@ -28,26 +28,26 @@ def press_and_release(key: str):
                 keyboard.press('e')
                 keyboard.release('e')
         case '1':
-                keyboard.press(KeyCode.from_vk(18))
-                keyboard.release(KeyCode.from_vk(18))
+                keyboard.press(KeyCode.from_vk(0x12))
+                keyboard.release(KeyCode.from_vk(0x12))
         case '2':
-                keyboard.press(KeyCode.from_vk(19))
-                keyboard.release(KeyCode.from_vk(19))
+                keyboard.press(KeyCode.from_vk(0x13))
+                keyboard.release(KeyCode.from_vk(0x13))
         case '3':
-                keyboard.press(KeyCode.from_vk(20))
-                keyboard.release(KeyCode.from_vk(20))
+                keyboard.press(KeyCode.from_vk(0x14))
+                keyboard.release(KeyCode.from_vk(0x14))
         case '4':
-                keyboard.press(KeyCode.from_vk(21))
-                keyboard.release(KeyCode.from_vk(21))
+                keyboard.press(KeyCode.from_vk(0x15))
+                keyboard.release(KeyCode.from_vk(0x15))
         case '5':
-                keyboard.press(KeyCode.from_vk(22))
-                keyboard.release(KeyCode.from_vk(22))
+                keyboard.press(KeyCode.from_vk(0x17))
+                keyboard.release(KeyCode.from_vk(0x17))
         case '6':
-                keyboard.press(KeyCode.from_vk(23))
-                keyboard.release(KeyCode.from_vk(23))
+                keyboard.press(KeyCode.from_vk(0x16))
+                keyboard.release(KeyCode.from_vk(0x16))
         case '7':
-                keyboard.press(KeyCode.from_vk(24))
-                keyboard.release(KeyCode.from_vk(24))
+                keyboard.press(KeyCode.from_vk(0x1A))
+                keyboard.release(KeyCode.from_vk(0x1A))
         case 'tab':
             keyboard.press(Key.tab)
             keyboard.release(Key.tab)
