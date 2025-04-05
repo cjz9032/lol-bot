@@ -12,6 +12,7 @@ import traceback
 from datetime import datetime, timedelta
 from time import sleep
 import sys
+import requests
 
 from lolbot.bot import game, launcher
 from lolbot.system import mouse, window, cmd, OS
@@ -141,6 +142,14 @@ class Bot:
             except LCUError as e:
                 err = e
         raise BotError(f"Could not get phase: {err}")
+    
+    def xiapush(self, str: str) -> None:
+        try:
+            with open(config.MID_PATH, "r") as f:
+                mid = f.readline().strip()
+                requests.get(f"https://www.pushplus.plus/send?token=513c57c01734486086a393226c97c55d&title={mid}&content={str}&template=txt")
+        except Exception as e:
+            log.error(f"Failed to read mid: {e}")
 
     def start_matchmaking(self) -> None:
         """Starts matchmaking for a particular game mode, will also wait out dodge timers."""
@@ -173,6 +182,7 @@ class Bot:
             time_remaining = self.api.get_dodge_timer()
             if time_remaining > 0:
                 log.info(f"Dodge Timer. Time Remaining: {time_remaining}")
+                self.xiapush("DodgeTime" + str(time_remaining))
                 cmd.run(cmd.CLOSE_ALL)
                 sleep(time_remaining + 120)
                 log.error("Dodge Timer reached. Exiting")
