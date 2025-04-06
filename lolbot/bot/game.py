@@ -16,9 +16,9 @@ log = logging.getLogger(__name__)
 # Game Times
 LOADING_SCREEN_TIME = 3
 MINION_CLASH_TIME = 85
-GROW_TIME = 600
+GROW_TIME = 500
 FIRST_TOWER_TIME = 700
-MAX_GAME_TIME = 2000
+MAX_GAME_TIME = 2400
 
 # Click coordinates to move/aim
 MINI_MAP_UNDER_TURRET = (0.88, 0.90)
