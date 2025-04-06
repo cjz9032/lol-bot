@@ -401,6 +401,8 @@ class Bot:
             "WindowMode": "2",
             "Height": "768",
             "Width": "1024",
+            "Width": "1024",
+            "EnableAudio": "0",
         }
         config_settings["Performance"] = {
             "ShadowQuality": "0",

@@ -215,6 +215,10 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
             if random.uniform(0, 100) > 80:
                 keypress('q')
                 sleep(1)
+        elif GLOBAL_CHAMP == 17:
+            attack_click(attack_position)
+            move((0.7+random.uniform(0, 0.2), 0.2+random.uniform(0, 0.3)), 0.1)
+            keypress('r')
         else:
             attack_click(attack_position)
             move((0.6+random.uniform(0, 0.3), 0.2+random.uniform(0, 0.2)), 0.1)
@@ -256,6 +260,12 @@ def shop() -> None:
 def upgrade_abilities() -> None:
     global GLOBAL_CHAMP
     window.check_window_exists(window.GAME_WINDOW)
+
+    if GLOBAL_CHAMP == 17:
+        keys.press_and_release('ctrl+r')
+        keys.press_and_release('ctrl+e')
+        keys.press_and_release('ctrl+w')
+
     if GLOBAL_CHAMP == 67:
         keys.press_and_release('ctrl+w')
         keys.press_and_release('ctrl+w')
