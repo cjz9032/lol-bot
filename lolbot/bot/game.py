@@ -55,6 +55,7 @@ def play_game(champ: int) -> None:
     """Plays a single game of League of Legends, takes actions based on game time"""
     global GLOBAL_CHAMP
     GLOBAL_CHAMP = champ
+    log.info(f"play game " + str(champ))
     game_server = GameServer()
     try:
         wait_for_game_window()
