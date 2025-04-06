@@ -206,9 +206,9 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
                 move((0.6+random.uniform(0, 0.3), 0.2+random.uniform(0, 0.2)), 0.1)
                 keypress('e', 0.1)
             keypress('q')
-            sleep(1)
-            move((0.3, 0.75))
-            keypress('w')
+            if random.uniform(0, 100) > 80:
+                move((0.3, 0.75))
+                keypress('w')
         elif GLOBAL_CHAMP == 222:
             attack_click(attack_position)
             if random.uniform(0, 100) > 80:
