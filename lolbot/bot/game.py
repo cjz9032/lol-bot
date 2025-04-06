@@ -40,19 +40,21 @@ SHOP_PURCHASE_ITEM_BUTTON = (0.7586, 0.58)
 # 912 143
 SHOP_CLOSE = (0.8906, 0.1861)
 # 580 227
-FACE_FRONT = (0.5764, 0.2955)
-FACE_END = (0.4, 0.6)
+FACE_FRONT = (0.5564, 0.2755)
+FACE_END = (0.35, 0.65)
 
 MAX_SERVER_ERRORS = 15
 
+GLOBAL_CHAMP = 0
 
 class GameError(Exception):
     """Indicates the game should be terminated"""
     pass
 
-
-def play_game() -> None:
+def play_game(champ: int) -> None:
     """Plays a single game of League of Legends, takes actions based on game time"""
+    global GLOBAL_CHAMP
+    GLOBAL_CHAMP = champ
     game_server = GameServer()
     try:
         wait_for_game_window()
@@ -169,6 +171,7 @@ def game_start(game_server: GameServer) -> None:
 
 
 def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_to_lane: int, excited: bool = False) -> None:
+    global GLOBAL_CHAMP
     """Buys items, levels up abilities, heads to lane, attacks, retreats, backs"""
     shop()
     upgrade_abilities()
@@ -182,7 +185,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
     # Main attack move loop. This sequence attacks and then de-aggros to prevent them from dying 50 times.
     l_game_time = game_server.get_game_time()
 
-    for i in range(50):
+    for i in range(60):
         hc = game_server.get_summoner_health()
         if (l_game_time > FIRST_TOWER_TIME if hc < .1 else hc < .5) or (int(json.loads(game_server.data)['activePlayer']['currentGold']) > 4000):
             keypress('f')
@@ -192,15 +195,33 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
         if game_server.summoner_is_dead():
             return
         
-        attack_click(attack_position)
-        left_click(FACE_END)
-        # keypress('e')
-        # sleep(1)
-        # keypress('w')
-        keypress('q')
+     
+        if GLOBAL_CHAMP == 67:
+            attack_click(attack_position)
+            left_click(FACE_END)
+            keypress('q')
+        elif GLOBAL_CHAMP == 18:
+            attack_click(attack_position)
+            for i in range(1, 3):
+                move((0.5564+random.uniform(0, 0.1), 0.2755+random.uniform(0, 0.1)), 0.1)
+                keypress('e', 0.1)
+            keypress('q')
+            sleep(1)
+            move(FACE_END)
+            keypress('w')
+        else:
+            attack_click(attack_position)
+            move((0.5564+random.uniform(0, 0.1), 0.2755+random.uniform(0, 0.1)))
+            keypress('e')
+            keypress('q')
+            keypress('w')
+            
+        if random.uniform(0, 100) > 80:
+            keypress('r')
+
         for i in range(1, 8):
             keypress(str(i), 0.1)
-        keypress('r')
+            
         
     if game_server.summoner_is_dead():
         return
@@ -227,10 +248,18 @@ def shop() -> None:
 
 
 def upgrade_abilities() -> None:
+    global GLOBAL_CHAMP
     window.check_window_exists(window.GAME_WINDOW)
-    keys.press_and_release('ctrl+w')
-    keys.press_and_release('ctrl+q')
-    keys.press_and_release('ctrl+r')
+    if GLOBAL_CHAMP == 67:
+        keys.press_and_release('ctrl+w')
+        keys.press_and_release('ctrl+w')
+        keys.press_and_release('ctrl+q')
+
+    if GLOBAL_CHAMP == 18:
+        keys.press_and_release('ctrl+q')
+        keys.press_and_release('ctrl+q')
+        keys.press_and_release('ctrl+e')
+
     upgrades = ['ctrl+q', 'ctrl+w', 'ctrl+e','ctrl+q', 'ctrl+w', 'ctrl+e']
     random.shuffle(upgrades)
     for upgrade in upgrades:
@@ -267,8 +296,11 @@ def attack_click(ratio: tuple) -> None:
     keys.key_up('a')
     sleep(.6)
 
+def move(ratio: tuple, delay = 0.2) -> None:
+    coords = window.convert_ratio(ratio, window.GAME_WINDOW)
+    mouse.move(coords, delay)
 
-def keypress(key: str, delay = 0.3) -> None:
+def keypress(key: str, delay = 0.2) -> None:
     window.check_window_exists(window.GAME_WINDOW)
     keys.press_and_release(key)
     sleep(delay)

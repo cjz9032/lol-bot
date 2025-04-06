@@ -51,6 +51,7 @@ class Bot:
         self.prev_phase = None
         self.bot_errors = 0
         self.phase_errors = 0
+        self.champ = 0
         # self.launch_errors = 0
 
     def run(self, message_queue: mp.Queue, games: mp.Value, errors: mp.Value) -> None:
@@ -107,7 +108,7 @@ class Bot:
                 case "ChampSelect":
                     self.champ_select()
                 case "InProgress":
-                    game.play_game()
+                    game.play_game(self.champ)
                 case "Reconnect":
                     self.reconnect()
                 case "WaitingForStats":
@@ -230,7 +231,7 @@ class Bot:
         logged = False
         champ = ""
         # https://darkintaqt.com/blog/champ-ids 67, 222, 202, 21
-        # priority_champs = [18] # 小跑
+        # priority_champs = [18] # 小跑 222 jinx
         priority_champs = [67, 67, 67, 67, 18, 222] # VN
         tried = False
         while True:
@@ -262,6 +263,7 @@ class Bot:
                             tried = True
                             if not logged:
                                 log.info(f"Locked in: {champ}")
+                                self.champ = champ
                                 log.info("Waiting for game to launch")
                                 logged = True
                             sleep(2)
