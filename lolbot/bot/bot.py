@@ -231,8 +231,8 @@ class Bot:
         logged = False
         champ = ""
         # https://darkintaqt.com/blog/champ-ids 67, 222, 202, 21
-        # priority_champs = [18] # 小跑 222 jinx
-        priority_champs = [67, 67, 67, 67, 18, 222] # VN
+        # priority_champs = [18] # 小跑 222 jinx 67 VN
+        priority_champs = [self.config.champ] # VN
         tried = False
         while True:
             try:

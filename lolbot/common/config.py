@@ -65,6 +65,7 @@ class Config:
     fps_type: int = FPS_OPTIONS.get("25")
     cjk_support: bool = False
     font_scale: float = .7
+    champ: int = 67
 
 
 def load_config() -> Config:
@@ -79,6 +80,8 @@ def load_config() -> Config:
     try:
         with open(CONFIG_PATH, 'r') as configfile:
             data = json.load(configfile)
+            if data.get('champ') == None:
+                data['champ'] = 67
             return Config(**data)
     except json.JSONDecodeError:
         return Config()
