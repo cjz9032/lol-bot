@@ -27,7 +27,7 @@ TIME_RESTART = 0
 if OS != "Windows":
     TIME_RESTART = 10086
 else:
-    TIME_RESTART = 33333
+    TIME_RESTART = 99999
     
 MAX_ACCEPT_LOOP = 70
 
