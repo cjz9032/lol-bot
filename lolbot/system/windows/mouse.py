@@ -9,24 +9,24 @@ import pyautogui
 
 pyautogui.FAILSAFE = False
 
-def left_click(wait=.3):
+def left_click(wait=.2):
     mouse.click()
     sleep(wait)
 
-def left_db_click(wait=.3):
+def left_db_click(wait=.2):
     mouse.double_click()
     sleep(wait)
 
-def right_click(wait=.3):
+def right_click(wait=.2):
     mouse.right_click()
     sleep(wait)
 
-def move(coords: tuple, wait=.3):
+def move(coords: tuple, wait=.2):
     pyautogui.moveTo(coords)
     sleep(wait)
 
-def move_and_click(coords: tuple, wait=.3):
+def move_and_click(coords: tuple, wait=.2):
     pyautogui.moveTo(coords)
-    sleep(.3)
+    sleep(.2)
     mouse.click()
     sleep(wait)

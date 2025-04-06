@@ -187,7 +187,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
 
     for i in range(60):
         hc = game_server.get_summoner_health()
-        if (l_game_time > FIRST_TOWER_TIME if hc < .1 else hc < .5) or (int(json.loads(game_server.data)['activePlayer']['currentGold']) > 4000):
+        if (l_game_time > FIRST_TOWER_TIME if hc < .01 else hc < .1) or (int(json.loads(game_server.data)['activePlayer']['currentGold']) > 4000):
             keypress('f')
             right_click(retreat)
             sleep(3)
@@ -198,16 +198,16 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
      
         if GLOBAL_CHAMP == 67:
             attack_click(attack_position)
-            left_click(FACE_END)
+            move(FACE_END)
             keypress('q')
         elif GLOBAL_CHAMP == 18:
             attack_click(attack_position)
-            for i in range(1, 3):
-                move((0.5564+random.uniform(0, 0.1), 0.2755+random.uniform(0, 0.1)), 0.1)
+            for i in range(1, 4):
+                move((0.5+random.uniform(0, 0.2), 0.2+random.uniform(0, 0.2)), 0.1)
                 keypress('e', 0.1)
             keypress('q')
             sleep(1)
-            move(FACE_END)
+            move((0.3, 0.75))
             keypress('w')
         else:
             attack_click(attack_position)
@@ -239,9 +239,9 @@ def shop() -> None:
     """Opens the shop and attempts to purchase items via default shop hotkeys"""
     keypress('p')  # open shop
     # repeat to click one
-    for i in range(2):
-        left_db_click(random.choice(SHOP_ITEM_BUTTONS), 0.3)
-        left_click(SHOP_PURCHASE_ITEM_BUTTON, 0.3)
+    for i in range(1):
+        left_db_click(random.choice(SHOP_ITEM_BUTTONS), 0.1)
+        left_click(SHOP_PURCHASE_ITEM_BUTTON, 0.1)
     # keypress('esc')
     left_click(SHOP_CLOSE)
     left_click(SYSTEM_MENU_X_BUTTON)
@@ -266,19 +266,19 @@ def upgrade_abilities() -> None:
         keys.press_and_release(upgrade)
 
 
-def left_click(ratio: tuple, delay = 0.3) -> None:
+def left_click(ratio: tuple, delay = 0.2) -> None:
     coords = window.convert_ratio(ratio, window.GAME_WINDOW)
     mouse.move(coords)
     mouse.left_click()
     sleep(delay)
 
-def left_db_click(ratio: tuple, delay = 0.3) -> None:
+def left_db_click(ratio: tuple, delay = 0.2) -> None:
     coords = window.convert_ratio(ratio, window.GAME_WINDOW)
     mouse.move(coords)
     mouse.left_db_click()
     sleep(delay)
 
-def right_click(ratio: tuple, delay = 0.3) -> None:
+def right_click(ratio: tuple, delay = 0.2) -> None:
     coords = window.convert_ratio(ratio, window.GAME_WINDOW)
     mouse.move(coords)
     mouse.right_click()
