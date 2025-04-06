@@ -138,7 +138,7 @@ class Bot:
                         raise BotError("Transition error. Phase will not change")
                 else:
                     self.phase_errors = 0
-                sleep(1.5)
+                sleep(1)
                 return self.phase
             except LCUError as e:
                 err = e
@@ -349,12 +349,12 @@ class Bot:
     def account_leveled(self) -> bool:
         """Checks if account has reached max level."""
         try:
-            if self.api.get_summoner_level() >= self.max_level:
-                if self.account["username"] == self.api.get_summoner_name():
-                    self.account["level"] = self.max_level
-                    accounts.save_or_add(self.account)
-                log.info("Account successfully leveled")
-                return True
+            # if self.api.get_summoner_level() >= self.max_level:
+            #     if self.account["username"] == self.api.get_summoner_name():
+            #         self.account["level"] = self.max_level
+            #         accounts.save_or_add(self.account)
+            #     log.info("Account successfully leveled")
+            #     return True
             return False
         except LCUError:
             return False
