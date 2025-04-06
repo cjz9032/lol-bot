@@ -108,7 +108,7 @@ class Bot:
                 case "ChampSelect":
                     self.champ_select()
                 case "InProgress":
-                    game.play_game(self.champ)
+                    game.play_game(self.champ == 0 if self.config.champ else self.champ)
                 case "Reconnect":
                     self.reconnect()
                 case "WaitingForStats":
