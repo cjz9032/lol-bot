@@ -254,9 +254,10 @@ class BotTab:
                 self.close_client()
                 self.message_queue.put("Clear")
                 self.stop_bot()
-                self.start_time = time.time()
-                self.bot_thread = multiprocessing.Process(target=Bot().run, args=(self.message_queue, self.games_played, self.bot_errors))
-                self.bot_thread.start()
+                self.restart_program()
+                # self.start_time = time.time()
+                # self.bot_thread = multiprocessing.Process(target=Bot().run, args=(self.message_queue, self.games_played, self.bot_errors))
+                # self.bot_thread.start()
                 dpg.configure_item("StartStopButton", label="Quit Bot")
         dpg.configure_item("Bot", default_value=msg)
 
