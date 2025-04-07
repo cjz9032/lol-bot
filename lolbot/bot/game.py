@@ -215,6 +215,12 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
             if random.uniform(0, 100) > 80:
                 keypress('q')
                 sleep(1)
+        elif GLOBAL_CHAMP == 11:
+            attack_click(attack_position)
+            for i in range(1, 4):
+                move((0.6+random.uniform(0, 0.3), 0.2+random.uniform(0, 0.2)), 0.1)
+                keypress('q', 0.1)
+            keypress('e')
         elif GLOBAL_CHAMP == 17:
             attack_click(attack_position)
             move((0.7+random.uniform(0, 0.2), 0.2+random.uniform(0, 0.3)), 0.1)
@@ -270,6 +276,11 @@ def upgrade_abilities() -> None:
         keys.press_and_release('ctrl+w')
         keys.press_and_release('ctrl+w')
         keys.press_and_release('ctrl+q')
+
+    if GLOBAL_CHAMP == 11:
+        keys.press_and_release('ctrl+r')
+        keys.press_and_release('ctrl+q')
+        keys.press_and_release('ctrl+e')
 
     if GLOBAL_CHAMP == 18:
         keys.press_and_release('ctrl+q')
