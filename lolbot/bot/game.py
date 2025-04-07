@@ -122,7 +122,8 @@ def game_loop(game_server: GameServer) -> None:
             if game_server.summoner_is_dead():
                 shop()
                 upgrade_abilities()
-                sleep(3)
+                sleep(5)
+                detectOffline()
                 continue
 
             # Take action based on game time
