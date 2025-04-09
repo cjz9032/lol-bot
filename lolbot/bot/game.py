@@ -236,9 +236,9 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
             keypress('q')
             attack_click(attack_position)
             keypress('w')
-            for i in range(1, 4):
-                move((0.55+random.uniform(0, 0.2), 0.3 + i*0.1), 0.05)
-                keypress('r')
+            for i in range(1, 3):
+                move((0.5+random.uniform(0, 0.1), 0.35 + i*0.1), 0.05)
+                keypress('r', 0.05)
         else:
             attack_click(attack_position)
             move((0.6+random.uniform(0, 0.3), 0.2+random.uniform(0, 0.2)), 0.1)
