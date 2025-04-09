@@ -182,7 +182,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
     # Walk to lane
     attack_click(attack_position)
     keypress('d')  # ghost
-    sleep(time_to_lane/2)
+    sleep(time_to_lane/2*3)
 
     # Main attack move loop. This sequence attacks and then de-aggros to prevent them from dying 50 times.
     l_game_time = game_server.get_game_time()
@@ -228,6 +228,16 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
             attack_click(attack_position)
             move((0.7+random.uniform(0, 0.2), 0.2+random.uniform(0, 0.3)), 0.1)
             keypress('r')
+        elif GLOBAL_CHAMP == 122:
+            attack_click(attack_position)
+            sleep(1)
+            right_click(FACE_END)
+            keypress('q')
+            attack_click(attack_position)
+            keypress('w')
+            for i in range(1, 4):
+                move((0.55+random.uniform(0, 0.2), 0.3 + i*0.1), 0.05)
+                keypress('r')
         else:
             attack_click(attack_position)
             move((0.6+random.uniform(0, 0.3), 0.2+random.uniform(0, 0.2)), 0.1)
@@ -295,6 +305,11 @@ def upgrade_abilities() -> None:
         keys.press_and_release('ctrl+q')
         keys.press_and_release('ctrl+q')
         keys.press_and_release('ctrl+r')
+
+    if GLOBAL_CHAMP == 122:
+        keys.press_and_release('ctrl+r')
+        keys.press_and_release('ctrl+q')
+        keys.press_and_release('ctrl+e')
 
     upgrades = ['ctrl+r', 'ctrl+w', 'ctrl+e','ctrl+q', 'ctrl+w', 'ctrl+e']
     random.shuffle(upgrades)
