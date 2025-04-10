@@ -199,6 +199,9 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
         
      
         if GLOBAL_CHAMP == 67:
+            if random.uniform(0, 100) > 70:
+                right_click(FACE_END, 0.2)
+                
             attack_click(attack_position)
             move(FACE_END)
             keypress('q')
