@@ -4,6 +4,7 @@ providing functions for interacting with various LoL endpoints.
 """
 import threading
 import logging
+from urllib.parse import quote
 
 import requests
 import urllib3
@@ -30,6 +31,7 @@ class LeagueClient:
         self.client.trust_env = False
         self.timer = None
         self.endpoint = cmd.get_auth_string()
+        print(self.endpoint)
 
     def update_auth(self):
         self.endpoint = cmd.get_auth_string()
@@ -219,6 +221,43 @@ class LeagueClient:
         except requests.RequestException as e:
             raise LCUError(f"Failed to get game phase: {e}")
 
+    def get_received_invitations(self) -> list:
+        url = f"{self.endpoint}/lol-lobby/v2/received-invitations"
+        try:
+            response = self.client.get(url)
+            response.raise_for_status()
+            return  response.json()
+        except requests.RequestException as e:
+            raise LCUError(f"Failed to get_received_invitations : {e}")
+
+    def inviteBySmid(self, smid: str) -> None:
+        url = f"{self.endpoint}/lol-lobby/v2/lobby/invitations"
+        try:
+            response = self.client.post(url, json=[{'toSummonerId': smid}])
+            response.raise_for_status()
+            return  response.json()
+        except requests.RequestException as e:
+            raise LCUError(f"Failed to inviteBySmid : {e}")
+
+    def get_smid_by_name(self, name: str) -> str:
+        url = f"{self.endpoint}/lol-summoner/v1/summoners?name={quote(name, safe='')}"
+        try:
+            response = self.client.get(url)
+            response.raise_for_status()
+            res = response.json()
+            return res['summonerId']
+        except requests.RequestException as e:
+            raise LCUError(f"Failed to get_smid_by_name : {e}")
+        
+    def get_lobby_members(self) -> list:
+        url = f"{self.endpoint}/lol-lobby/v2/lobby/members"
+        try:
+            response = self.client.get(url)
+            response.raise_for_status()
+            return  response.json()
+        except requests.RequestException as e:
+            raise LCUError(f"Failed to get_lobby_members : {e}")
+
     def create_lobby(self, lobby_id: int) -> None:
         """Creates a lobby for given lobby ID"""
         url = f"{self.endpoint}/lol-lobby/v2/lobby"
@@ -264,6 +303,15 @@ class LeagueClient:
             response.raise_for_status()
         except requests.RequestException as e:
             raise LCUError(f"Failed to accept match: {e}")
+        
+    def accept_invite(self, invitationId: str) -> None:
+        url = f"{self.endpoint}/lol-lobby/v2/received-invitations/{invitationId}/accept"
+        try:
+            response = self.client.post(url)
+            print(response)
+            response.raise_for_status()
+        except requests.RequestException as e:
+            raise LCUError(f"Failed to accept_invite: {e}")
 
     def get_champ_select_data(self) -> dict:
         """Gets champ select lobby data"""

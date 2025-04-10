@@ -152,10 +152,35 @@ class Bot:
         except Exception as e:
             log.error(f"Failed to read mid: {e}")
 
+    def wait_accept(self) -> None:
+        list = self.api.get_received_invitations()
+        if list:
+            item = next((invite for invite in list if invite["state"] == "Pending" and invite["canAcceptInvitation"] == True), None)
+            if item != None:
+                self.api.accept_invite(item['invitationId'])
+
+    def invite_friends(self, name: str) -> bool:
+        members = self.api.get_lobby_members()
+        if len(members) != 2:
+            smid = self.api.get_smid_by_name(name)
+            if smid:
+                self.api.inviteBySmid(smid)
+            sleep(10)
+            membersAfter = self.api.get_lobby_members()
+            return len(membersAfter) == 2
+        else:
+            return True
+
     def start_matchmaking(self) -> None:
         """Starts matchmaking for a particular game mode, will also wait out dodge timers."""
         # reset again 
         self.set_game_config()
+        if self.config.main != True:
+            self.wait_accept()
+            sleep(5)
+            return
+            
+        
         # Create lobby
         lobby_name = ""
         for lobby, lid in config.ALL_LOBBIES.items():
@@ -168,6 +193,14 @@ class Bot:
         except LCUError:
             sleep(3)
             return
+        
+        if self.config.friend != "":
+            while True:
+                invited = self.invite_friends(self.config.friend)
+                if invited != True:
+                    sleep(5)
+                else:
+                    break
 
         # Start Matchmaking
         log.info("Starting queue")
@@ -329,6 +362,12 @@ class Bot:
         return False
 
     def end_of_game(self) -> None:
+        if self.config.main != True:
+            self.wait_accept()
+            sleep(2)
+            return
+        
+        
         """Transitions out of EndOfGame."""
         log.info("Starting new game")
         posted = False

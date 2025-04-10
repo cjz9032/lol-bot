@@ -66,6 +66,8 @@ class Config:
     cjk_support: bool = False
     font_scale: float = .7
     champ: int = 67
+    main: bool = True
+    friend: str = None
 
 
 def load_config() -> Config:
@@ -78,10 +80,16 @@ def load_config() -> Config:
         save_config(default_config)
         return default_config
     try:
-        with open(CONFIG_PATH, 'r') as configfile:
+        with open(CONFIG_PATH, 'r', encoding='utf-8') as configfile:
             data = json.load(configfile)
             if data.get('champ') == None:
                 data['champ'] = 67
+
+            if data.get('main') == None:
+                data['main'] = True
+
+            if data.get('friend') == None:
+                data['friend'] = ""
             return Config(**data)
     except json.JSONDecodeError:
         return Config()
