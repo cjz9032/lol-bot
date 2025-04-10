@@ -201,7 +201,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
         if GLOBAL_CHAMP == 67:
             if random.uniform(0, 100) > 70:
                 right_click(FACE_END, 0.2)
-                
+
             attack_click(attack_position)
             move(FACE_END)
             keypress('q')
@@ -252,12 +252,13 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
             keypress('q')
             keypress('w')
             
+        move(FACE_FRONT)
+            
         if random.uniform(0, 100) > 80:
             keypress('r')
 
         for i in range(1, 8):
-            if i != 4:
-                keypress(str(i), 0.1)
+            keypress(str(i), 0.05)
             
         
     if game_server.summoner_is_dead():
