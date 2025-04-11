@@ -177,7 +177,7 @@ class Bot:
         self.set_game_config()
         if self.config.main != True:
             self.wait_accept()
-            sleep(5)
+            sleep(10)
             return
             
         
