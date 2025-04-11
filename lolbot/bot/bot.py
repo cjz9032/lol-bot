@@ -177,7 +177,7 @@ class Bot:
         self.set_game_config()
         if self.config.main != True:
             self.wait_accept()
-            sleep(10)
+            sleep(8)
             return
             
         
@@ -281,7 +281,7 @@ class Bot:
                             # log.info(f"No champ hovered : champ_list {champ_list}")
                             available_priority_champs = [champ for champ in champ_list if champ in priority_champs]
                             log.info(f"No champ hovered : available_priority_champs {available_priority_champs}")
-                            if available_priority_champs and (not tried) and (random.randint(1, 100) > 10):
+                            if available_priority_champs and (not tried) and (random.randint(1, 100) > 1):
                                 champ = random.choice(available_priority_champs)
                             else:
                                 champ = random.choice(champ_list)
