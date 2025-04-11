@@ -272,6 +272,7 @@ class Bot:
         # https://darkintaqt.com/blog/champ-ids 67, 222, 202, 21
         # priority_champs = [18] # 小跑 222 jinx 67 VN
         priority_champs = [self.config.champ] # VN
+        print(priority_champs)
         tried = False
         while True:
             try:
