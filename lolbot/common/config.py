@@ -58,7 +58,7 @@ FPS_OPTIONS = {
 
 @dataclass
 class Config:
-    windows_install_dir: str = "C:/Riot Games/League of Legends"
+    windows_install_dir: str = "D:/lll/Game"
     macos_install_dir: str = "/Applications/League of Legends.app"
     lobby: int = 870
     max_level: int = 300
