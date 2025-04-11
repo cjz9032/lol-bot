@@ -285,7 +285,15 @@ class LeagueClient:
             return str(int(response.json()['timeInQueue']))
         except requests.RequestException as e:
             raise LCUError(f"Could not get time in queue: {e}")
-
+        
+    def quit_lobby(self) -> None:
+        url = f"{self.endpoint}/lol-lobby/v2/lobby"
+        try:
+            response = self.client.delete(url)
+            response.raise_for_status()
+        except requests.RequestException as e:
+            raise LCUError(f"Error quit_lobby: {e}")
+        
     def quit_matchmaking(self) -> None:
         """Cancels matchmaking search"""
         url = f"{self.endpoint}/lol-lobby/v2/lobby/matchmaking/search"

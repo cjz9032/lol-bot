@@ -210,6 +210,12 @@ class Bot:
         except LCUError as e:
             log.warning("Starting queue failed")
             log.warning(e)
+            try:
+                self.api.quit_lobby()
+            except LCUError as e:
+                log.warning(e)
+        
+            
         
         # Wait out dodge timer
         try:
