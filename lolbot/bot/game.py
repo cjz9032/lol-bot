@@ -191,7 +191,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
     # Main attack move loop. This sequence attacks and then de-aggros to prevent them from dying 50 times.
     l_game_time = game_server.get_game_time()
 
-    for i in range(60):
+    for i in range(30):
         hc = game_server.get_summoner_health()
         if (l_game_time > FIRST_TOWER_TIME if hc < .01 else hc < .1) or (int(json.loads(game_server.data)['activePlayer']['currentGold']) > 4000):
             keypress('f')
