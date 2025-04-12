@@ -180,9 +180,13 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
     left_click(AFK_OK_BUTTON)
 
     # Walk to lane
+    if GLOBAL_CHAMP == 33:
+        keypress('q')
+
     attack_click(attack_position)
     keypress('d')  # ghost
     sleep(time_to_lane/2)
+
 
     # Main attack move loop. This sequence attacks and then de-aggros to prevent them from dying 50 times.
     l_game_time = game_server.get_game_time()
@@ -249,6 +253,15 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
             keypress('w')
             keypress('e')
             attack_click(attack_position)
+        elif GLOBAL_CHAMP == 33:
+            for i in range(1, 3):
+                move((0.5+random.uniform(0, 0.1), 0.35 + i*0.1), 0.05)
+                keypress('e', 0.05)
+            keypress('w')
+            if random.uniform(0, 100) > 80:
+                keypress('r')
+            attack_click(attack_position)
+            sleep(8)
         else:
             attack_click(attack_position)
             move((0.6+random.uniform(0, 0.3), 0.2+random.uniform(0, 0.2)), 0.1)
@@ -280,11 +293,15 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
 
 
 def shop() -> None:
+    global GLOBAL_CHAMP
     """Opens the shop and attempts to purchase items via default shop hotkeys"""
     keypress('p')  # open shop
     # repeat to click one
     for i in range(1):
-        left_db_click(random.choice(SHOP_ITEM_BUTTONS), 0.1)
+        if GLOBAL_CHAMP == 33:
+            left_db_click((0.2448, 0.7552), 0.1)
+        else:
+            left_db_click((0.2148, 0.7552), 0.1)
         left_click(SHOP_PURCHASE_ITEM_BUTTON, 0.1)
     # keypress('esc')
     left_click(SHOP_CLOSE)
@@ -299,7 +316,10 @@ def upgrade_abilities() -> None:
         keys.press_and_release('ctrl+r')
         keys.press_and_release('ctrl+e')
         keys.press_and_release('ctrl+w')
-
+    if GLOBAL_CHAMP == 33:
+        keys.press_and_release('ctrl+w')
+        keys.press_and_release('ctrl+r')
+        keys.press_and_release('ctrl+e')
     if GLOBAL_CHAMP == 67:
         keys.press_and_release('ctrl+w')
         keys.press_and_release('ctrl+w')
