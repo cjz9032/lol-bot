@@ -259,6 +259,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
                 keypress('e', 0.05)
             keypress('w')
             if random.uniform(0, 100) > 80:
+                move(FACE_FRONT)
                 keypress('r')
             attack_click(attack_position)
             sleep(8)
