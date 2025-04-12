@@ -304,7 +304,7 @@ def shop() -> None:
     keypress('p')  # open shop
     # repeat to click one
     for i in range(1):
-        if GLOBAL_CHAMP == 33:
+        if GLOBAL_CHAMP == 33 or GLOBAL_CHAMP == 222:
             left_db_click((0.2448, 0.7552), 0.1)
         else:
             left_db_click((0.2148, 0.7552), 0.1)
