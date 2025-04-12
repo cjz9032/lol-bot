@@ -16,8 +16,8 @@ log = logging.getLogger(__name__)
 # Game Times
 LOADING_SCREEN_TIME = 3
 MINION_CLASH_TIME = 85
-GROW_TIME = 500
-FIRST_TOWER_TIME = 700
+GROW_TIME = 300
+FIRST_TOWER_TIME = 600
 MAX_GAME_TIME = 2400
 
 # Click coordinates to move/aim
@@ -26,7 +26,7 @@ MINI_MAP_CENTER_MID = (0.9035, 0.87)
 # 933 664
 MINI_MAP_GROW_ATTACK = (0.9035, 0.87)
 MINI_MAP_CENTER_MID_ATTACK = (0.92, 0.85)
-MINI_MAP_ENEMY_NEXUS = (0.9778, 0.7752)
+MINI_MAP_ENEMY_NEXUS = (0.9678, 0.7852)
 ULT_DIRECTION = (0.7298, 0.2689)
 CENTER_OF_SCREEN = (0.5, 0.5)
 
@@ -199,7 +199,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
         
      
         if GLOBAL_CHAMP == 67:
-            if random.uniform(0, 100) > 70:
+            if random.uniform(0, 100) > 80:
                 right_click(FACE_END, 0.2)
 
             attack_click(attack_position)
@@ -368,7 +368,7 @@ def move(ratio: tuple, delay = 0.2) -> None:
     coords = window.convert_ratio(ratio, window.GAME_WINDOW)
     mouse.move(coords, delay)
 
-def keypress(key: str, delay = 0.2) -> None:
+def keypress(key: str, delay = 0.1) -> None:
     window.check_window_exists(window.GAME_WINDOW)
     keys.press_and_release(key)
     sleep(delay)
