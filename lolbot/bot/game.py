@@ -182,7 +182,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
     # Walk to lane
     attack_click(attack_position)
     keypress('d')  # ghost
-    sleep(time_to_lane/2*3)
+    sleep(time_to_lane/2)
 
     # Main attack move loop. This sequence attacks and then de-aggros to prevent them from dying 50 times.
     l_game_time = game_server.get_game_time()
