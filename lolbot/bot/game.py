@@ -441,7 +441,7 @@ def attack_click(ratio: tuple) -> None:
     sleep(.3)
 
 def move(ratio: tuple, delay = 0.1) -> None:
-    coords = window.convert_ratio(ratio, win_x, win_y, win_l, win_h)
+    coords = window.convert_ratio_abs(ratio, win_x, win_y, win_l, win_h)
     mouse.move(coords, delay)
 
 def keypress(key: str, delay = 0.1) -> None:
