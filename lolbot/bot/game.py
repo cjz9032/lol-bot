@@ -294,10 +294,12 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
         if random.uniform(0, 100) > 80:
             move(FACE_FRONT)
             keypress('r')
+
+
+        if random.uniform(0, 100) > 90:
             for i in range(1, 8):
                 keypress(str(i), 0.05)
             signal()
-
         
     if game_server.summoner_is_dead():
         return
