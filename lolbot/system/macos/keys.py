@@ -48,6 +48,9 @@ def press_and_release(key: str):
         case '7':
                 keyboard.press(KeyCode.from_vk(0x1A))
                 keyboard.release(KeyCode.from_vk(0x1A))
+        case 'g':
+                keyboard.press(KeyCode.from_vk(0x05))
+                keyboard.release(KeyCode.from_vk(0x05))
         case 'v':
                 keyboard.press(KeyCode.from_vk(0x09))
                 keyboard.release(KeyCode.from_vk(0x09))

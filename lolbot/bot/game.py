@@ -171,14 +171,20 @@ def game_start(game_server: GameServer) -> None:
         left_click(AFK_OK_BUTTON)
     log.info("Playing Game")
 
+def signal():
+    keypress('v')
+    left_click(FACE_FRONT)
+    keypress('u')
+    keypress('g')
+    left_click(FACE_FRONT)
 
 def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_to_lane: int, excited: bool = False) -> None:
     global GLOBAL_CHAMP
     """Buys items, levels up abilities, heads to lane, attacks, retreats, backs"""
+    signal()
     shop()
     upgrade_abilities()
     left_click(AFK_OK_BUTTON)
-    keypress('u')
 
     # Walk to lane
     if GLOBAL_CHAMP == 33:
@@ -295,9 +301,8 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
         for i in range(1, 8):
             keypress(str(i), 0.05)
 
-        keypress('v')
-        left_click(FACE_FRONT)
-        keypress('u')
+        signal()
+
         
     if game_server.summoner_is_dead():
         return
