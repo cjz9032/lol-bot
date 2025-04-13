@@ -181,7 +181,6 @@ def signal():
 def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_to_lane: int, excited: bool = False) -> None:
     global GLOBAL_CHAMP
     """Buys items, levels up abilities, heads to lane, attacks, retreats, backs"""
-    signal()
     shop()
     upgrade_abilities()
     left_click(AFK_OK_BUTTON)
