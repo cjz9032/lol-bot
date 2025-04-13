@@ -1,4 +1,5 @@
 keyboard
+pynput
 pyautogui
 requests
 urllib3

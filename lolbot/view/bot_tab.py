@@ -13,6 +13,7 @@ import requests
 import dearpygui.dearpygui as dpg
 
 from lolbot.common import config
+from lolbot.common.bg import BG
 from lolbot.system import cmd
 from lolbot.lcu.league_client import LeagueClient, LCUError
 from lolbot.lcu import game_server
@@ -30,6 +31,7 @@ else:
     TIME_RESTART = 99999
     
 MAX_ACCEPT_LOOP = 70
+import sys
 
 class BotTab:
     """Class that displays the BotTab and handles bot controls/output"""
@@ -46,6 +48,9 @@ class BotTab:
         self.start_time = None
         self.app_start = time.time()
 
+        self.event_queue = multiprocessing.Queue()
+        self.bg_th = multiprocessing.Process(target=BG().run, args=(self.event_queue,))
+        self.bg_th.start()
     def create_tab(self, parent) -> None:
         with dpg.tab(label="Bot", parent=parent) as self.status_tab:
             dpg.add_spacer()
@@ -110,6 +115,9 @@ class BotTab:
 
     def restart_program(self) -> None:
         self.stop_bot()
+        self.bg_th.terminate()
+        self.bg_th.join()
+        self.bg_th = None
         cmd.restart_program()
 
 
@@ -208,6 +216,18 @@ class BotTab:
             pass
 
     def update_bot_panel(self):
+        if not self.event_queue.empty():
+                event = self.event_queue.get()
+                if event == "stop":
+                    print("stop it")
+                    self.stop_bot()
+                    self.bg_th.terminate()
+                    self.bg_th.join()
+                    self.bg_th = None
+                    # cmd.restart_program()
+                    sys.exit()
+                    return
+        
         msg = ""
         if (self.bot_thread is None) or (not self.bot_thread.is_alive()):
             msg += textwrap.dedent("""\
