@@ -241,9 +241,10 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
                 move(FACE_FRONT)
                 keypress('q')
                 keypress('e')
-                if random.uniform(0, 100) > 70:
-                    self_press('r')
                 attack_click(attack_position)
+                hc = game_server.get_summoner_health()
+                if hc < .5:
+                    self_press('r')
                 sleep(1)
         elif GLOBAL_CHAMP == 222:
             attack_click(attack_position)
