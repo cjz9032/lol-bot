@@ -11,22 +11,27 @@ pyautogui.FAILSAFE = False
 
 def left_click(wait = .2):
     pyautogui.leftClick()
-    sleep(wait)
+    if wait > 0:
+        sleep(wait)
 
 def left_db_click(wait=.2):
     pyautogui.doubleClick()
-    sleep(wait)
+    if wait > 0:
+        sleep(wait)
 
 def right_click(wait = .2):
     pyautogui.rightClick()
-    sleep(wait)
+    if wait > 0:
+        sleep(wait)
 
 def move(coords: tuple, wait = .2):
     pyautogui.moveTo(coords)
-    sleep(wait)
+    if wait > 0:
+        sleep(wait)
 
 def move_and_click(coords: tuple, wait = .2):
     pyautogui.moveTo(coords)
     sleep(.2)
     pyautogui.leftClick()
-    sleep(wait)
+    if wait > 0:
+        sleep(wait)

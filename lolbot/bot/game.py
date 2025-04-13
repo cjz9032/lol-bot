@@ -266,8 +266,8 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
         elif GLOBAL_CHAMP == 11:
             attack_click(attack_position)
             for i in range(1, 12):
-                move((0.35+random.uniform(0, 0.25), 0.3+random.uniform(0, 0.3)), 0.05)
-                keypress('q', 0.05)
+                move((0.35+random.uniform(0, 0.35), 0.25+random.uniform(0, 0.35)), 0)
+                keypress('q', 0)
             keypress('e')
             keypress('w')
             attack_click(attack_position)
@@ -423,35 +423,32 @@ def convert_ratio(ratio: tuple):
     updated_y = ((win_h - win_y) * ratio[1]) + win_y
     return updated_x, updated_y
 
-def left_click(ratio: tuple, delay = 0.2) -> None:
+def left_click(ratio: tuple, delay = 0.1) -> None:
     coords = convert_ratio(ratio)
-    mouse.move(coords)
-    mouse.left_click()
-    sleep(delay)
+    mouse.move(coords, 0)
+    mouse.left_click(delay)
 
-def left_db_click(ratio: tuple, delay = 0.2) -> None:
+def left_db_click(ratio: tuple, delay = 0.1) -> None:
     coords = convert_ratio(ratio)
-    mouse.move(coords)
-    mouse.left_db_click()
-    sleep(delay)
+    mouse.move(coords, 0)
+    mouse.left_db_click(delay)
 
-def right_click(ratio: tuple, delay = 0.2) -> None:
+def right_click(ratio: tuple, delay = 0.1) -> None:
     coords = convert_ratio(ratio)
-    mouse.move(coords)
-    mouse.right_click()
-    sleep(delay)
+    mouse.move(coords, 0)
+    mouse.right_click(delay)
 
 
 def attack_click(ratio: tuple) -> None:
     coords = convert_ratio(ratio)
-    mouse.move(coords)
+    mouse.move(coords, 0)
     keys.key_down('a')
     sleep(.1)
     mouse.left_click()
     sleep(.1)
     mouse.left_click()
     keys.key_up('a')
-    sleep(.6)
+    sleep(.3)
 
 def move(ratio: tuple, delay = 0.1) -> None:
     coords = convert_ratio(ratio)
@@ -459,8 +456,10 @@ def move(ratio: tuple, delay = 0.1) -> None:
 
 def keypress(key: str, delay = 0.1) -> None:
     keys.press_and_release(key)
-    sleep(delay)
+    if delay > 0:
+        sleep(delay)
 
 def self_press(key: str, delay = 0.1) -> None:
     keys.key_self_press(key)
-    sleep(delay)
+    if delay > 0:
+        sleep(delay)
