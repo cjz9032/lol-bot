@@ -178,6 +178,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
     shop()
     upgrade_abilities()
     left_click(AFK_OK_BUTTON)
+    keypress('u')
 
     # Walk to lane
     if GLOBAL_CHAMP == 33:
@@ -221,15 +222,14 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
                 move((0.3, 0.75))
                 keypress('w')
         elif GLOBAL_CHAMP == 15:
-            attack_click(attack_position)
-            if random.uniform(0, 100) > 80:
-                right_click(FACE_END, 0.2)
-            attack_click(attack_position)
-            keypress('w')
-            move(FACE_FRONT)
-            keypress('q')
-            keypress('e')
-            sleep(3)
+            for i in range(1, 3):
+                keypress('w')
+                move(FACE_FRONT)
+                keypress('q')
+                keypress('e')
+                if random.uniform(0, 100) > 70:
+                    keypress('r')
+                attack_click(attack_position)
         elif GLOBAL_CHAMP == 222:
             attack_click(attack_position)
             sleep(1)
@@ -294,7 +294,10 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
 
         for i in range(1, 8):
             keypress(str(i), 0.05)
-            
+
+        keypress('v')
+        left_click(FACE_FRONT)
+        keypress('u')
         
     if game_server.summoner_is_dead():
         return
@@ -314,7 +317,7 @@ def shop() -> None:
     keypress('p')  # open shop
     # repeat to click one
     for i in range(1):
-        if GLOBAL_CHAMP == 33 or GLOBAL_CHAMP == 222:
+        if GLOBAL_CHAMP == 33 or GLOBAL_CHAMP == 222 or GLOBAL_CHAMP == 15:
             left_db_click((0.2448, 0.7552), 0.1)
         else:
             left_db_click((0.2148, 0.7552), 0.1)
@@ -337,9 +340,9 @@ def upgrade_abilities() -> None:
         keys.press_and_release('ctrl+r')
         keys.press_and_release('ctrl+e')
     if GLOBAL_CHAMP == 15:
+        keys.press_and_release('ctrl+r')
         keys.press_and_release('ctrl+w')
         keys.press_and_release('ctrl+q')
-        keys.press_and_release('ctrl+r')
     if GLOBAL_CHAMP == 67:
         keys.press_and_release('ctrl+w')
         keys.press_and_release('ctrl+w')
