@@ -185,7 +185,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
 
     attack_click(attack_position)
     keypress('d')  # ghost
-    sleep(time_to_lane/2)
+    sleep(time_to_lane/1.5)
 
 
     # Main attack move loop. This sequence attacks and then de-aggros to prevent them from dying 50 times.
@@ -220,6 +220,16 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
             if random.uniform(0, 100) > 80:
                 move((0.3, 0.75))
                 keypress('w')
+        elif GLOBAL_CHAMP == 15:
+            attack_click(attack_position)
+            if random.uniform(0, 100) > 80:
+                right_click(FACE_END, 0.2)
+            attack_click(attack_position)
+            keypress('w')
+            move(FACE_FRONT)
+            keypress('q')
+            keypress('e')
+            sleep(3)
         elif GLOBAL_CHAMP == 222:
             attack_click(attack_position)
             sleep(1)
@@ -326,6 +336,10 @@ def upgrade_abilities() -> None:
         keys.press_and_release('ctrl+w')
         keys.press_and_release('ctrl+r')
         keys.press_and_release('ctrl+e')
+    if GLOBAL_CHAMP == 15:
+        keys.press_and_release('ctrl+w')
+        keys.press_and_release('ctrl+q')
+        keys.press_and_release('ctrl+r')
     if GLOBAL_CHAMP == 67:
         keys.press_and_release('ctrl+w')
         keys.press_and_release('ctrl+w')
