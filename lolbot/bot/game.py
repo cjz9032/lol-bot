@@ -47,6 +47,12 @@ MAX_SERVER_ERRORS = 15
 
 GLOBAL_CHAMP = 0
 
+win_x = 0
+win_y = 0
+win_l = 0
+win_h = 0
+
+
 class GameError(Exception):
     """Indicates the game should be terminated"""
     pass
@@ -60,6 +66,7 @@ def play_game(champ: int) -> None:
     try:
         wait_for_game_window()
         wait_for_connection(game_server)
+        init_game_window()
         game_loop(game_server)
     except GameError as e:
         log.warning(e)
@@ -399,28 +406,44 @@ def upgrade_abilities() -> None:
     for upgrade in upgrades:
         keys.press_and_release(upgrade)
 
+def init_game_window() -> None:
+    global win_x
+    global win_y
+    global win_l
+    global win_h
+    win_x, win_y, win_l, win_h = window.get_window_size(window.GAME_WINDOW)
+
+def convert_ratio(ratio: tuple):
+    global win_x
+    global win_y
+    global win_l
+    global win_h
+
+    updated_x = ((win_l - win_x) * ratio[0]) + win_x
+    updated_y = ((win_h - win_y) * ratio[1]) + win_y
+    return updated_x, updated_y
 
 def left_click(ratio: tuple, delay = 0.2) -> None:
-    coords = window.convert_ratio(ratio, window.GAME_WINDOW)
+    coords = convert_ratio(ratio)
     mouse.move(coords)
     mouse.left_click()
     sleep(delay)
 
 def left_db_click(ratio: tuple, delay = 0.2) -> None:
-    coords = window.convert_ratio(ratio, window.GAME_WINDOW)
+    coords = convert_ratio(ratio)
     mouse.move(coords)
     mouse.left_db_click()
     sleep(delay)
 
 def right_click(ratio: tuple, delay = 0.2) -> None:
-    coords = window.convert_ratio(ratio, window.GAME_WINDOW)
+    coords = convert_ratio(ratio)
     mouse.move(coords)
     mouse.right_click()
     sleep(delay)
 
 
 def attack_click(ratio: tuple) -> None:
-    coords = window.convert_ratio(ratio, window.GAME_WINDOW)
+    coords = convert_ratio(ratio)
     mouse.move(coords)
     keys.key_down('a')
     sleep(.1)
@@ -431,7 +454,7 @@ def attack_click(ratio: tuple) -> None:
     sleep(.6)
 
 def move(ratio: tuple, delay = 0.1) -> None:
-    coords = window.convert_ratio(ratio, window.GAME_WINDOW)
+    coords = convert_ratio(ratio)
     mouse.move(coords, delay)
 
 def keypress(key: str, delay = 0.1) -> None:
