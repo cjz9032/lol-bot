@@ -84,7 +84,7 @@ def wait_for_game_window() -> None:
             if window.check_window_exists(window.GAME_WINDOW):
                 log.info("Game Launched")
                 if OS == 'Windows':
-                    window.bring_to_front()
+                    window.bring_to_front(window.GAME_WINDOW)
                 sleep(1)
                 left_click(CENTER_OF_SCREEN)
                 left_click(CENTER_OF_SCREEN)
