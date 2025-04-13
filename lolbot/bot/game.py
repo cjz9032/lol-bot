@@ -197,7 +197,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
     # Main attack move loop. This sequence attacks and then de-aggros to prevent them from dying 50 times.
     l_game_time = game_server.get_game_time()
 
-    for i in range(30):
+    for i in range(60):
         hc = game_server.get_summoner_health()
         if (l_game_time > FIRST_TOWER_TIME if hc < .01 else hc < .1) or (int(json.loads(game_server.data)['activePlayer']['currentGold']) > 4000):
             keypress('f')
@@ -244,6 +244,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
                 if random.uniform(0, 100) > 70:
                     self_press('r')
                 attack_click(attack_position)
+                sleep(1)
         elif GLOBAL_CHAMP == 222:
             attack_click(attack_position)
             sleep(1)
@@ -329,6 +330,8 @@ def shop() -> None:
     for i in range(1):
         if GLOBAL_CHAMP == 33 or GLOBAL_CHAMP == 222 or GLOBAL_CHAMP == 15:
             left_db_click((0.2448, 0.7552), 0.1)
+        elif GLOBAL_CHAMP == 10:
+            left_db_click((0.3148, 0.7552), 0.1)
         else:
             left_db_click((0.2148, 0.7552), 0.1)
         left_click(SHOP_PURCHASE_ITEM_BUTTON, 0.1)
@@ -421,7 +424,7 @@ def attack_click(ratio: tuple) -> None:
     keys.key_up('a')
     sleep(.6)
 
-def move(ratio: tuple, delay = 0.2) -> None:
+def move(ratio: tuple, delay = 0.1) -> None:
     coords = window.convert_ratio(ratio, window.GAME_WINDOW)
     mouse.move(coords, delay)
 
