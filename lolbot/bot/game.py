@@ -337,6 +337,7 @@ def shop(game_time: int) -> None:
     global GLOBAL_CHAMP
     """Opens the shop and attempts to purchase items via default shop hotkeys"""
     keypress('p')  # open shop
+    sleep(1)
     left_click((0.5478, 0.1971))
 
     max_num = 6 if game_time >= 900 else 3
@@ -416,25 +417,25 @@ def init_game_window() -> None:
     global win_h
     win_x, win_y, win_l, win_h = window.get_window_size(window.GAME_WINDOW)
 
-def left_click(ratio: tuple, delay = 0.1) -> None:
+def left_click(ratio: tuple, delay = 0.2) -> None:
     coords = window.convert_ratio_abs(ratio, win_x, win_y, win_l, win_h)
-    mouse.move(coords, 0.1)
+    mouse.move(coords, 0.2)
     mouse.left_click(delay)
 
-def left_db_click(ratio: tuple, delay = 0.1) -> None:
+def left_db_click(ratio: tuple, delay = 0.2) -> None:
     coords = window.convert_ratio_abs(ratio, win_x, win_y, win_l, win_h)
-    mouse.move(coords, 0.1)
+    mouse.move(coords, 0.2)
     mouse.left_db_click(delay)
 
-def right_click(ratio: tuple, delay = 0.1) -> None:
+def right_click(ratio: tuple, delay = 0.2) -> None:
     coords = window.convert_ratio_abs(ratio, win_x, win_y, win_l, win_h)
-    mouse.move(coords, 0.1)
+    mouse.move(coords, 0.2)
     mouse.right_click(delay)
 
 
 def attack_click(ratio: tuple) -> None:
     coords = window.convert_ratio_abs(ratio, win_x, win_y, win_l, win_h)
-    mouse.move(coords, 0.1)
+    mouse.move(coords, 0.2)
     keys.key_down('a')
     sleep(.1)
     mouse.left_click()
@@ -443,16 +444,16 @@ def attack_click(ratio: tuple) -> None:
     keys.key_up('a')
     sleep(.5)
 
-def move(ratio: tuple, delay = 0.1) -> None:
+def move(ratio: tuple, delay = 0.2) -> None:
     coords = window.convert_ratio_abs(ratio, win_x, win_y, win_l, win_h)
     mouse.move(coords, delay)
 
-def keypress(key: str, delay = 0.1) -> None:
+def keypress(key: str, delay = 0.2) -> None:
     keys.press_and_release(key)
     if delay > 0:
         sleep(delay)
 
-def self_press(key: str, delay = 0.1) -> None:
+def self_press(key: str, delay = 0.2) -> None:
     keys.key_self_press(key)
     if delay > 0:
         sleep(delay)
