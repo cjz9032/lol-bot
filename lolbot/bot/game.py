@@ -413,34 +413,24 @@ def init_game_window() -> None:
     global win_h
     win_x, win_y, win_l, win_h = window.get_window_size(window.GAME_WINDOW)
 
-def convert_ratio(ratio: tuple):
-    global win_x
-    global win_y
-    global win_l
-    global win_h
-
-    updated_x = ((win_l - win_x) * ratio[0]) + win_x
-    updated_y = ((win_h - win_y) * ratio[1]) + win_y
-    return updated_x, updated_y
-
 def left_click(ratio: tuple, delay = 0.1) -> None:
-    coords = convert_ratio(ratio)
+    coords = window.convert_ratio_abs(ratio, win_x, win_y, win_l, win_h)
     mouse.move(coords, 0)
     mouse.left_click(delay)
 
 def left_db_click(ratio: tuple, delay = 0.1) -> None:
-    coords = convert_ratio(ratio)
+    coords = window.convert_ratio_abs(ratio, win_x, win_y, win_l, win_h)
     mouse.move(coords, 0)
     mouse.left_db_click(delay)
 
 def right_click(ratio: tuple, delay = 0.1) -> None:
-    coords = convert_ratio(ratio)
+    coords = window.convert_ratio_abs(ratio, win_x, win_y, win_l, win_h)
     mouse.move(coords, 0)
     mouse.right_click(delay)
 
 
 def attack_click(ratio: tuple) -> None:
-    coords = convert_ratio(ratio)
+    coords = window.convert_ratio_abs(ratio, win_x, win_y, win_l, win_h)
     mouse.move(coords, 0)
     keys.key_down('a')
     sleep(.1)
@@ -451,7 +441,7 @@ def attack_click(ratio: tuple) -> None:
     sleep(.3)
 
 def move(ratio: tuple, delay = 0.1) -> None:
-    coords = convert_ratio(ratio)
+    coords = window.convert_ratio(ratio, win_x, win_y, win_l, win_h)
     mouse.move(coords, delay)
 
 def keypress(key: str, delay = 0.1) -> None:

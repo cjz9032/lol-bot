@@ -38,3 +38,8 @@ def convert_ratio(ratio: tuple, window_name: str):
     updated_x = ((l - x) * ratio[0]) + x
     updated_y = ((h - y) * ratio[1]) + y
     return updated_x, updated_y
+
+def convert_ratio_abs(ratio: tuple, win_x, win_y,win_l,win_h):
+    updated_x = ((win_l - win_x) * ratio[0]) + win_x
+    updated_y = ((win_h - win_y) * ratio[1]) + win_y
+    return updated_x, updated_y
