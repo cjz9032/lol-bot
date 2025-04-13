@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 import json
 
 from lolbot.lcu.game_server import GameServer, GameServerError
-from lolbot.system import mouse, keys, window, cmd
+from lolbot.system import mouse, keys, window, cmd, OS
 
 log = logging.getLogger(__name__)
 
@@ -83,6 +83,9 @@ def wait_for_game_window() -> None:
         try:
             if window.check_window_exists(window.GAME_WINDOW):
                 log.info("Game Launched")
+                if OS == 'Windows':
+                    window.bring_to_front()
+                sleep(1)
                 left_click(CENTER_OF_SCREEN)
                 left_click(CENTER_OF_SCREEN)
                 return
