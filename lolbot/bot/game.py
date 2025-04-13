@@ -235,6 +235,15 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
                 if random.uniform(0, 100) > 70:
                     keypress('r')
                 attack_click(attack_position)
+        elif GLOBAL_CHAMP == 10:
+            for i in range(1, 3):
+                self_press('w')
+                move(FACE_FRONT)
+                keypress('q')
+                keypress('e')
+                if random.uniform(0, 100) > 70:
+                    self_press('r')
+                attack_click(attack_position)
         elif GLOBAL_CHAMP == 222:
             attack_click(attack_position)
             sleep(1)
@@ -340,6 +349,10 @@ def upgrade_abilities() -> None:
         keys.press_and_release('ctrl+w')
         keys.press_and_release('ctrl+r')
         keys.press_and_release('ctrl+e')
+    if GLOBAL_CHAMP == 10:
+        keys.press_and_release('ctrl+e')
+        keys.press_and_release('ctrl+r')
+        keys.press_and_release('ctrl+w')
     if GLOBAL_CHAMP == 15:
         keys.press_and_release('ctrl+r')
         keys.press_and_release('ctrl+w')
@@ -413,6 +426,9 @@ def move(ratio: tuple, delay = 0.2) -> None:
     mouse.move(coords, delay)
 
 def keypress(key: str, delay = 0.1) -> None:
-    window.check_window_exists(window.GAME_WINDOW)
     keys.press_and_release(key)
+    sleep(delay)
+
+def self_press(key: str, delay = 0.1) -> None:
+    keys.key_self_press(key)
     sleep(delay)

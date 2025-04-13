@@ -17,6 +17,11 @@ def key_down(key: str):
 def key_up(key: str):
     keyboard.release(key)
 
+def key_self_press(key: str):
+    keyboard.press('alt')
+    press_and_release(key)
+    keyboard.release('alt')
 
 def write(text: str):
     keyboard.write(text, delay=.1)
+

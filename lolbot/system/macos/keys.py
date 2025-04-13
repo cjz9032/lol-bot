@@ -60,6 +60,12 @@ def press_and_release(key: str):
         case 'tab':
             keyboard.press(Key.tab)
             keyboard.release(Key.tab)
+        case 'alt':
+        #     0x3A        Option
+        #     0x36        Right Cmd
+        #     0x3B        Control
+            keyboard.press(Key.alt)
+            keyboard.release(Key.alt)
         case 'enter':
             keyboard.press(Key.enter)
             keyboard.release(Key.enter)
@@ -72,6 +78,11 @@ def key_down(key: str):
 
 def key_up(key: str):
     keyboard.release(key)
+
+def key_self_press(key: str):
+    key_down(Key.alt)
+    press_and_release(key)
+    key_up(Key.alt)
 
 def write(text: str):
     keyboard.type(text)
