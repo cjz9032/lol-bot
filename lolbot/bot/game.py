@@ -332,7 +332,7 @@ def shop(game_time: int) -> None:
     max_num = 6 if game_time >= 900 else 3
     # repeat to click one
     for i in range(max_num):
-        left_click((0.2434 + (0.0391 * (i-1)), 0.3710))
+        left_click((0.2434 + (0.0391 * (i)), 0.3710))
         # if GLOBAL_CHAMP == 33 or GLOBAL_CHAMP == 222 or GLOBAL_CHAMP == 15:
         #     left_db_click((0.2448, 0.7552), 0.1)
         # elif GLOBAL_CHAMP == 10:
