@@ -98,6 +98,26 @@ class LeagueClient:
         except requests.RequestException as e:
             raise LCUError(f"Error retrieving display name: {e}")
 
+    def mod_item_sets(self, body):
+        acid = self.get_accountId()
+        url = f"{self.endpoint}/lol-item-sets/v1/item-sets/{acid}/sets"
+        body['accountId'] = acid
+        
+        try:
+            response = self.client.put(url, json=body)
+            return response
+        except Exception as e:
+            raise e
+
+    def get_accountId(self) -> str:
+        url = f"{self.endpoint}/lol-summoner/v1/current-summoner"
+        try:
+            response = self.client.get(url)
+            response.raise_for_status()
+            return str(response.json()['accountId'])
+        except requests.RequestException as e:
+            raise LCUError(f"Error retrieving summoner id: {e}")
+
     def get_summoner_level(self) -> int:
         """Gets level logged in account"""
         url = f"{self.endpoint}/lol-summoner/v1/current-summoner"
