@@ -120,7 +120,7 @@ def game_loop(game_server: GameServer) -> None:
         while True:
             # Don't start new sequence when dead
             if game_server.summoner_is_dead():
-                shop()
+                shop(game_time)
                 upgrade_abilities()
                 sleep(5)
                 detectOffline()
@@ -134,11 +134,11 @@ def game_loop(game_server: GameServer) -> None:
             elif game_time < MINION_CLASH_TIME:
                 game_start(game_server)
             elif game_time < GROW_TIME:
-                play(game_server, MINI_MAP_GROW_ATTACK, MINI_MAP_UNDER_TURRET, 20)
+                play(game_server, MINI_MAP_GROW_ATTACK, MINI_MAP_UNDER_TURRET, 20, game_time)
             elif game_time < FIRST_TOWER_TIME:
-                play(game_server, MINI_MAP_CENTER_MID_ATTACK, MINI_MAP_UNDER_TURRET, 20)
+                play(game_server, MINI_MAP_CENTER_MID_ATTACK, MINI_MAP_UNDER_TURRET, 20, game_time)
             elif game_time < MAX_GAME_TIME:
-                play(game_server, MINI_MAP_ENEMY_NEXUS, MINI_MAP_CENTER_MID, 35)
+                play(game_server, MINI_MAP_ENEMY_NEXUS, MINI_MAP_CENTER_MID, 35, game_time)
             else:
                 raise GameError("Game has exceeded the max time limit")
     except GameServerError as e:
@@ -178,10 +178,10 @@ def signal():
     keypress('g')
     left_click(FACE_FRONT)
 
-def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_to_lane: int, excited: bool = False) -> None:
+def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_to_lane: int, game_time: int) -> None:
     global GLOBAL_CHAMP
     """Buys items, levels up abilities, heads to lane, attacks, retreats, backs"""
-    shop()
+    shop(game_time)
     upgrade_abilities()
     left_click(AFK_OK_BUTTON)
 
@@ -323,19 +323,24 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
     sleep(9)
 
 
-def shop() -> None:
+def shop(game_time: int) -> None:
     global GLOBAL_CHAMP
     """Opens the shop and attempts to purchase items via default shop hotkeys"""
     keypress('p')  # open shop
+    left_click((0.5478, 0.1971))
+
+    max_num = 6 if game_time >= 900 else 3
     # repeat to click one
-    for i in range(1):
-        if GLOBAL_CHAMP == 33 or GLOBAL_CHAMP == 222 or GLOBAL_CHAMP == 15:
-            left_db_click((0.2448, 0.7552), 0.1)
-        elif GLOBAL_CHAMP == 10:
-            left_db_click((0.3148, 0.7552), 0.1)
-        else:
-            left_db_click((0.2148, 0.7552), 0.1)
-        left_click(SHOP_PURCHASE_ITEM_BUTTON, 0.1)
+    for i in range(max_num):
+        left_click((0.2434 + (0.0391 * (i-1)), 0.3710))
+        # if GLOBAL_CHAMP == 33 or GLOBAL_CHAMP == 222 or GLOBAL_CHAMP == 15:
+        #     left_db_click((0.2448, 0.7552), 0.1)
+        # elif GLOBAL_CHAMP == 10:
+        #     left_db_click((0.3148, 0.7552), 0.1)
+        # else:
+        #     left_db_click((0.2148, 0.7552), 0.1)
+        left_click(SHOP_PURCHASE_ITEM_BUTTON)
+        
     # keypress('esc')
     left_click(SHOP_CLOSE)
     left_click(SYSTEM_MENU_X_BUTTON)
