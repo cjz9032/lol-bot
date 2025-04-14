@@ -316,6 +316,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
 
 
         if random.uniform(0, 100) > 90:
+            move(FACE_FRONT)
             for i in range(1, 8):
                 keypress(str(i), 0.05)
             signal()
