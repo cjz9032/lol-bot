@@ -340,9 +340,9 @@ def shop(game_time: int) -> None:
 
     max_num = 2
     if game_time > 600:
-        max_num = 3
-    elif game_time > 900:
         max_num = 4
+    elif game_time > 900:
+        max_num = 5
     elif game_time > 1200:
         max_num = 6
 
