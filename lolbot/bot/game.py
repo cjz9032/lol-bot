@@ -230,8 +230,8 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
         elif GLOBAL_CHAMP == 18:
             attack_click(attack_position)
             for i in range(1, 15):
-                move((0.3+random.uniform(0, 0.4), 0.1+random.uniform(0, 0.3)), 0.05)
-                keypress('e', 0.05)
+                move((0.3+random.uniform(0, 0.4), 0.1+random.uniform(0, 0.3)), 0)
+                keypress('e', 0)
             keypress('q')
             if random.uniform(0, 100) > 80:
                 move((0.3, 0.75))
@@ -272,7 +272,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
                 move((0.35+random.uniform(0, 0.35), 0.25+random.uniform(0, 0.35)), 0)
                 keypress('q', 0)
             keypress('e')
-            keypress('w')
+            keypress('w', 0)
             attack_click(attack_position)
         elif GLOBAL_CHAMP == 17:
             attack_click(attack_position)
@@ -340,7 +340,14 @@ def shop(game_time: int) -> None:
     sleep(1)
     left_click((0.5478, 0.1971))
 
-    max_num = 6 if game_time >= 900 else 3
+    max_num = 2
+    if game_time > 600:
+        max_num = 3
+    elif game_time > 900:
+        max_num = 4
+    elif game_time > 1200:
+        max_num = 6
+
     # repeat to click one
     for i in range(max_num):
         left_click((0.2434 + (0.0391 * (i)), 0.3710))
@@ -353,7 +360,8 @@ def shop(game_time: int) -> None:
         left_click(SHOP_PURCHASE_ITEM_BUTTON)
         
     # keypress('esc')
-    left_click(SHOP_CLOSE)
+    sleep(1)
+    left_click(SHOP_CLOSE, .3)
     left_click(SYSTEM_MENU_X_BUTTON)
 
 
