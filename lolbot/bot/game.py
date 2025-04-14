@@ -182,11 +182,12 @@ def game_start(game_server: GameServer) -> None:
     log.info("Playing Game")
 
 def signal():
-    keypress('v')
-    left_click(FACE_FRONT)
+    if random.uniform(0, 100) > 80:
+        keypress('v')
+        left_click(FACE_FRONT)
+        keypress('g')
+        left_click(FACE_FRONT)
     keypress('u')
-    keypress('g')
-    left_click(FACE_FRONT)
 
 def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_to_lane: int, game_time: int) -> None:
     global GLOBAL_CHAMP
