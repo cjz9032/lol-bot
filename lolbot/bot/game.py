@@ -246,7 +246,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
                     keypress('r')
                 attack_click(attack_position)
         elif GLOBAL_CHAMP == 10:
-            for i in range(1, 3):
+            for i in range(1, 4):
                 self_press('w')
                 move(FACE_FRONT)
                 keypress('q')
@@ -255,7 +255,6 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
                 hc = game_server.get_summoner_health()
                 if hc < .5:
                     self_press('r')
-                sleep(1)
         elif GLOBAL_CHAMP == 222:
             attack_click(attack_position)
             sleep(1)
@@ -289,11 +288,10 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
                 move((0.5+random.uniform(0, 0.1), 0.35 + i*0.1), 0.05)
                 keypress('r', 0.05)
         elif GLOBAL_CHAMP == 54:
-            keypress('w')
-            sleep(1)
-            keypress('e')
-            attack_click(attack_position)
-            sleep(1)
+            for i in range(1, 2):
+                keypress('w')
+                keypress('e')
+                attack_click(attack_position)
         elif GLOBAL_CHAMP == 33:
             for i in range(1, 3):
                 move((0.5+random.uniform(0, 0.1), 0.35 + i*0.1), 0.05)
@@ -450,7 +448,7 @@ def attack_click(ratio: tuple) -> None:
     sleep(.1)
     mouse.left_click()
     keys.key_up('a')
-    sleep(.5)
+    sleep(.2)
 
 def move(ratio: tuple, delay = 0.2) -> None:
     coords = window.convert_ratio_abs(ratio, win_x, win_y, win_l, win_h)
