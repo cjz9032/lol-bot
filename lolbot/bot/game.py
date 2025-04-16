@@ -130,7 +130,7 @@ def game_loop(game_server: GameServer) -> None:
         while True:
             # Don't start new sequence when dead
             if game_server.summoner_is_dead():
-                shop(game_time)
+                shop(game_server)
                 upgrade_abilities()
                 sleep(5)
                 detectOffline()
@@ -192,7 +192,7 @@ def signal():
 def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_to_lane: int, game_time: int) -> None:
     global GLOBAL_CHAMP
     """Buys items, levels up abilities, heads to lane, attacks, retreats, backs"""
-    shop(game_time)
+    shop(game_server)
     upgrade_abilities()
     left_click(AFK_OK_BUTTON)
 
@@ -333,7 +333,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
     sleep(9)
 
 
-def shop(game_time: int) -> None:
+def shop(game_server: GameServer) -> None:
     global GLOBAL_CHAMP
     """Opens the shop and attempts to purchase items via default shop hotkeys"""
     keypress('p')  # open shop
