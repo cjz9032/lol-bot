@@ -16,7 +16,7 @@ import requests
 
 from lolbot.bot import game, launcher
 from lolbot.system import mouse, window, cmd, OS
-from lolbot.common import accounts, config, logger
+from lolbot.common import config, logger
 from lolbot.lcu.league_client import LeagueClient, LCUError
 
 log = logging.getLogger(__name__)
@@ -45,7 +45,6 @@ class Bot:
         self.launcher = launcher.Launcher()
         self.config = config.load_config()
         self.lobby = self.config.lobby
-        self.account = None
         self.phase = None
         self.prev_phase = None
         self.bot_errors = 0
@@ -62,7 +61,7 @@ class Bot:
             try:
                 errors.value = self.bot_errors
                 self.set_game_config()
-                self.launcher.launch_league(self.account["username"], self.account["password"])
+                self.launcher.launch_league()
                 self.wait_for_patching()
                 self.set_game_config()
                 self.leveling_loop(games)
@@ -96,7 +95,7 @@ class Bot:
 
     def leveling_loop(self, games: mp.Value) -> None:
         """Loop that takes action based on the phase of the League Client, continuously starts games."""
-        while not self.account_leveled():
+        while True:
             match self.get_phase():
                 case "None" | "Lobby":
                     self.start_matchmaking()
