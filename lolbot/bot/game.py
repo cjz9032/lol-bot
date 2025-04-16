@@ -343,23 +343,23 @@ def shop(game_server: GameServer) -> None:
     game_time2 = game_server.get_game_time()
 
     max_num = 2
-    if game_time2 > 600:
-        max_num = 4
+    if game_time2 > 1200:
+        max_num = 6
     elif game_time2 > 900:
         max_num = 5
-    elif game_time2 > 1200:
-        max_num = 6
+    elif game_time2 > 600:
+        max_num = 4
 
     # repeat to click one
     for i in range(max_num):
-        left_click((0.2434 + (0.0391 * (i)), 0.3710), 0)
+        left_click((0.2434 + (0.0391 * (i)), 0.3710), 0.1)
         # if GLOBAL_CHAMP == 33 or GLOBAL_CHAMP == 222 or GLOBAL_CHAMP == 15:
         #     left_db_click((0.2448, 0.7552), 0.1)
         # elif GLOBAL_CHAMP == 10:
         #     left_db_click((0.3148, 0.7552), 0.1)
         # else:
         #     left_db_click((0.2148, 0.7552), 0.1)
-        left_click(SHOP_PURCHASE_ITEM_BUTTON, 0)
+        left_click(SHOP_PURCHASE_ITEM_BUTTON, 0.1)
         
     # keypress('esc')
     sleep(1)
