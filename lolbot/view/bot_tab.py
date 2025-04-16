@@ -30,7 +30,7 @@ if OS != "Windows":
 else:
     TIME_RESTART = 99999
     
-MAX_ACCEPT_LOOP = 60
+MAX_ACCEPT_LOOP = 50
 import sys
 
 class BotTab:
