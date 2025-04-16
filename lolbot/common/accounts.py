@@ -27,16 +27,6 @@ def load_accounts() -> list:
             json.dump(accounts, account_file, indent=4)
     return accounts
 
-
-def get_account(max_level: int = 10000) -> dict:
-    """Return first account under max_level."""
-    accounts = load_accounts()
-    for account in accounts:
-        if account['level'] < max_level:
-            return account
-    return {"username": "", "password": "", "level": 0}
-
-
 def save_or_add(account: dict) -> None:
     """If an account with this username already exists, update it. Otherwise, add account."""
     accounts = load_accounts()

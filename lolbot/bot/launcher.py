@@ -27,16 +27,12 @@ class Launcher:
 
     def __init__(self):
         self.api = LeagueClient()
-        self.username = ''
-        self.password = ''
         self.attempts = 0
         self.riotAttemps = 0
         self.success = False
         self.config = config.load_config()
 
-    def launch_league(self, username: str = '', password: str = ''):
-        self.username = username
-        self.password = password
+    def launch_league(self):
         for i in range(3):
             self.launch_sequence()
             if self.success:
@@ -54,47 +50,27 @@ class Launcher:
         sleep(50)
 
     def launchWindows(self):
-        # prepare QQ
-        # log.info("qq")
-        # subprocess.Popen("C:\Program Files\Tencent\QQNT\QQ.exe", shell=True)
-        # sleep(6)
-        # keys.press_and_release('enter')
-        # login_exe = os.path.join(self.config.windows_install_dir, '../TCLS/client.exe')
-        # subprocess.Popen(login_exe, shell=True)
-        # sleep(20)
+        if self.config.riot:
+            cmd.run(cmd.LAUNCH_CLIENT)
+            sleep(50)
+        else:
+            # wegame tray
+            sleep(10)
+            mouse.move((1117,938))
+            mouse.left_db_click()
+            sleep(5)
 
-        # window.bring_to_front(window.TX_LOGIN_WINDOW)
-        # todo improve check
-        # # rat = (arr)=>copy(`(${(arr[0]/1280).toFixed(4)}, ${(arr[1]/768).toFixed(4)})`)
+            # go
+            window.bring_to_front(window.WG_LOGIN_WINDOW)
+            mouse.move((1155,830)) # something does not work
+            # coords = window.convert_ratio((0.96,0.96), window.WG_LOGIN_WINDOW)
+            # mouse.move(coords)
 
-        # left_click((0.8672, 0.4245))
-        # sleep(2)
-        # left_click((0.8969, 0.7969))
-        # sleep(2)
-        # left_click((0.8945, 0.7292))
-        # sleep(2)
-        # left_click((0.7141, 0.8138))
-        # sleep(10)
-        # cmd.run(cmd.CLOSE_QQ)
-        # sleep(30)
-
-        # wegame tray
-        sleep(10)
-        mouse.move((1117,938))
-        mouse.left_db_click()
-        sleep(5)
-
-        # go
-        window.bring_to_front(window.WG_LOGIN_WINDOW)
-        mouse.move((1155,830)) # something does not work
-        # coords = window.convert_ratio((0.96,0.96), window.WG_LOGIN_WINDOW)
-        # mouse.move(coords)
-
-        sleep(1)
-        mouse.left_db_click()
-        sleep(1)
-        mouse.left_db_click()
-        sleep(40)
+            sleep(1)
+            mouse.left_db_click()
+            sleep(1)
+            mouse.left_db_click()
+            sleep(40)
 
 
     def launch_sequence(self):
@@ -129,21 +105,23 @@ class Launcher:
 
         # Riot Client is opened and Not Logged In
         elif cmd.run(cmd.IS_LAUNCHER_RUNNING):
-            if self.attempts == 3:
-                raise LaunchError("Max login attempts exceeded. Check username and password")
-            elif self.username == "" or self.password == "":
-                raise LaunchError("Username or Password not set")
+            cmd.run(cmd.CLOSE_LAUNCHER)
+            sleep(3)
+            # if self.attempts == 3:
+            #     raise LaunchError("Max login attempts exceeded. Check username and password")
+            # elif self.username == "" or self.password == "":
+            #     raise LaunchError("Username or Password not set")
 
-            log.info("Riot Client opened. Logging in")
-            self.attempts += 1
-            # self.lcu.login(self.username, self.password)
-            self.manual_login()
-            sleep(30)
-            self.api.update_auth()
-            if not self.api.access_token_exists():
-                log.warning("Login attempt failed")
-                cmd.run(cmd.CLOSE_ALL)
-                sleep(10)
+            # log.info("Riot Client opened. Logging in")
+            # self.attempts += 1
+            # # self.lcu.login(self.username, self.password)
+            # self.manual_login()
+            # sleep(30)
+            # self.api.update_auth()
+            # if not self.api.access_token_exists():
+            #     log.warning("Login attempt failed")
+            #     cmd.run(cmd.CLOSE_ALL)
+            #     sleep(10)
 
         # Nothing is opened
         else:
@@ -152,32 +130,3 @@ class Launcher:
                 self.launchWindows()
             else:
                 self.launchMac()
-
-    def manual_login(self):
-        """
-        Sends keystrokes into username and password fields. Only use if
-        Riot Client lcu login does not work.
-        """
-        log.info('Manually logging into Riot Client')
-        keys.write(self.username)
-        sleep(.5)
-        keys.press_and_release('tab')
-        sleep(.5)
-        keys.write(self.password)
-        sleep(.5)
-        keys.press_and_release('enter')
-        sleep(1)
-
-    def verify_account(self) -> bool:
-        """Checks if account username match the account that is currently logged in."""
-        log.info("Verifying logged-in account credentials")
-        try:
-            if self.username == self.api.get_summoner_name():
-                log.info("Account Verified")
-                return True
-            else:
-                log.warning("Accounts do not match!")
-                return False
-        except LCUError:
-            log.warning("Could not get account information")
-            return False

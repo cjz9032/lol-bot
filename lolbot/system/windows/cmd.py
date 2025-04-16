@@ -13,8 +13,8 @@ LCU_TOKEN_KEY = "--remoting-auth-token="
 PORT_REGEX = re.compile(r"--app-port=(\d+)")
 TOKEN_REGEX = re.compile(r"--remoting-auth-token=(\S+)")
 
-# Commands
-LAUNCH_CLIENT = r'"C:\Riot Games\Riot Client\RiotClientServices" --launch-product=league_of_legends --launch-patchline=live'
+# Commands todo
+LAUNCH_CLIENT = r'"O:\Riot Games\Riot Client\RiotClientServices" --launch-product=league_of_legends --launch-patchline=live'
 
 IS_GAME_RUNNING = 'tasklist | findstr /r /i "\<League of Legends\>"'
 IS_CLIENT_RUNNING = 'tasklist | findstr /i "LeagueClient"'
@@ -24,8 +24,7 @@ CLOSE_GAME = 'taskkill /F /IM "League of Legends.exe"'
 CLOSE_LOGIN = 'taskkill /F /IM "Client.exe"'
 CLOSE_CLIENT = 'taskkill /F /IM League*'
 CLOSE_LAUNCHER = 'taskkill /F /IM Riot*'
-CLOSE_QQ = 'taskkill /F /IM qq.exe'
-CLOSE_ALL = f"{CLOSE_LAUNCHER} & {CLOSE_CLIENT} & {CLOSE_LOGIN} & CLOSE_QQ"
+CLOSE_ALL = f"{CLOSE_LAUNCHER} & {CLOSE_CLIENT} & {CLOSE_LOGIN}"
 
 
 def run(command: str) -> bool:  

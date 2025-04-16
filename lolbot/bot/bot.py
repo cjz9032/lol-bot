@@ -44,7 +44,6 @@ class Bot:
         self.api = LeagueClient()
         self.launcher = launcher.Launcher()
         self.config = config.load_config()
-        self.max_level = self.config.max_level
         self.lobby = self.config.lobby
         self.account = None
         self.phase = None
@@ -62,7 +61,7 @@ class Bot:
         while True:
             try:
                 errors.value = self.bot_errors
-                self.account = accounts.get_account(self.max_level)
+                self.set_game_config()
                 self.launcher.launch_league(self.account["username"], self.account["password"])
                 self.wait_for_patching()
                 self.set_game_config()
@@ -175,6 +174,7 @@ class Bot:
         """Starts matchmaking for a particular game mode, will also wait out dodge timers."""
         # reset again 
         self.set_game_config()
+        self.set_items()
         if self.config.main != True:
             self.wait_accept()
             sleep(8)
@@ -392,19 +392,6 @@ class Bot:
                 pass
         raise BotError("Could not exit play-again screen")
 
-    def account_leveled(self) -> bool:
-        """Checks if account has reached max level."""
-        try:
-            # if self.api.get_summoner_level() >= self.max_level:
-            #     if self.account["username"] == self.api.get_summoner_name():
-            #         self.account["level"] = self.max_level
-            #         accounts.save_or_add(self.account)
-            #     log.info("Account successfully leveled")
-            #     return True
-            return False
-        except LCUError:
-            return False
-
     def wait_for_patching(self) -> None:
         """Checks if the League Client is patching and waits till it is finished."""
         log.info("Checking for Client Updates")
@@ -420,6 +407,22 @@ class Bot:
                 # raise BotError("Client is patching too long")
                 break
         log.info("Client is up to date")
+
+    def set_items(self) -> None:
+        eq_config_json = None
+        if self.config.champ == 10:
+            eq_config_json = {"accountId":0,"itemSets":[{"associatedChampions":[],"associatedMaps":[11,12],"blocks":[{"hideIfSummonerSpell":"","items":[{"count":1,"id":"3124"},{"count":1,"id":"3115"},{"count":1,"id":"3089"},{"count":1,"id":"4645"},{"count":1,"id":"3100"},{"count":1,"id":"3135"}],"showIfSummonerSpell":"","type":"new"}],"map":"any","mode":"any","preferredItemSlots":[],"sortrank":0,"startedFrom":"blank","title":"kayle","type":"custom","uid":"dd8238a0-184e-11f0-a7cf-91572ef6bd74"}],"timestamp":0}
+        elif self.config.champ == 67:
+            eq_config_json = {"accountId":0,"itemSets":[{"associatedChampions":[],"associatedMaps":[11,12],"blocks":[{"hideIfSummonerSpell":"","items":[{"count":1,"id":"3153"},{"count":1,"id":"3124"},{"count":1,"id":"6672"},{"count":1,"id":"3302"},{"count":1,"id":"6665"},{"count":1,"id":"3078"}],"showIfSummonerSpell":"","type":"new"}],"map":"any","mode":"any","preferredItemSlots":[],"sortrank":0,"startedFrom":"blank","title":"vn","type":"custom","uid":"4d7dc320-1860-11f0-acd8-cdfc9c909c19"}],"timestamp":0}
+        elif self.config.champ == 54:
+            eq_config_json = {"accountId":0,"itemSets":[{"associatedChampions":[],"associatedMaps":[11,12],"blocks":[{"hideIfSummonerSpell":"","items":[{"count":1,"id":"3047"},{"count":1,"id":"3068"},{"count":1,"id":"2504"},{"count":1,"id":"6665"},{"count":1,"id":"3083"},{"count":1,"id":"3143"}],"showIfSummonerSpell":"","type":"new"}],"map":"any","mode":"any","preferredItemSlots":[],"sortrank":0,"startedFrom":"blank","title":"malphite","type":"custom","uid":"4d7dc320-1860-11f0-acd8-cdfc9c909c19"}],"timestamp":0}
+        elif self.config.champ == 15:
+            eq_config_json = {"accountId":0,"itemSets":[{"associatedChampions":[],"associatedMaps":[11,12],"blocks":[{"hideIfSummonerSpell":"","items":[{"count":1,"id":"3508"},{"count":1,"id":"6675"},{"count":1,"id":"3031"},{"count":1,"id":"3036"},{"count":1,"id":"3072"},{"count":1,"id":"3032"}],"showIfSummonerSpell":"","type":"new"}],"map":"any","mode":"any","preferredItemSlots":[],"sortrank":0,"startedFrom":"blank","title":"sivir","type":"custom","uid":"4d7dc320-1860-11f0-acd8-cdfc9c909c19"}],"timestamp":0}
+        elif self.config.champ == 11:
+            eq_config_json = {"accountId":0,"itemSets":[{"associatedChampions":[],"associatedMaps":[11,12],"blocks":[{"hideIfSummonerSpell":"","items":[{"count":1,"id":"3153"},{"count":1,"id":"3032"},{"count":1,"id":"3031"},{"count":1,"id":"3036"},{"count":1,"id":"6675"},{"count":1,"id":"3006"}],"showIfSummonerSpell":"","type":"new"}],"map":"any","mode":"any","preferredItemSlots":[],"sortrank":0,"startedFrom":"blank","title":"master","type":"custom","uid":"4d7dc320-1860-11f0-acd8-cdfc9c909c19"}],"timestamp":0}
+        else:
+            eq_config_json = {"accountId":0,"itemSets":[{"associatedChampions":[],"associatedMaps":[11,12],"blocks":[{"hideIfSummonerSpell":"","items":[{"count":1,"id":"3153"},{"count":1,"id":"3032"},{"count":1,"id":"3031"},{"count":1,"id":"3036"},{"count":1,"id":"6675"},{"count":1,"id":"3006"}],"showIfSummonerSpell":"","type":"new"}],"map":"any","mode":"any","preferredItemSlots":[],"sortrank":0,"startedFrom":"blank","title":"test","type":"custom","uid":"4d7dc320-1860-11f0-acd8-cdfc9c909c19"}],"timestamp":0}
+        self.api.mod_item_sets(eq_config_json)
 
     def set_game_config(self) -> None:
         """Overwrites the League of Legends game config."""
@@ -491,22 +494,6 @@ class Bot:
             json.dump(data, file, indent=4)
         if OS != "Windows":
             os.chmod(persisted_settings, 0o444)
-
-        eq_config_json = None
-        if self.config.champ == 10:
-            eq_config_json = {"accountId":0,"itemSets":[{"associatedChampions":[],"associatedMaps":[11,12],"blocks":[{"hideIfSummonerSpell":"","items":[{"count":1,"id":"3124"},{"count":1,"id":"3115"},{"count":1,"id":"3089"},{"count":1,"id":"4645"},{"count":1,"id":"3100"},{"count":1,"id":"3135"}],"showIfSummonerSpell":"","type":"new"}],"map":"any","mode":"any","preferredItemSlots":[],"sortrank":0,"startedFrom":"blank","title":"kayle","type":"custom","uid":"dd8238a0-184e-11f0-a7cf-91572ef6bd74"}],"timestamp":0}
-        elif self.config.champ == 67:
-            eq_config_json = {"accountId":0,"itemSets":[{"associatedChampions":[],"associatedMaps":[11,12],"blocks":[{"hideIfSummonerSpell":"","items":[{"count":1,"id":"3153"},{"count":1,"id":"3124"},{"count":1,"id":"6672"},{"count":1,"id":"3302"},{"count":1,"id":"6665"},{"count":1,"id":"3078"}],"showIfSummonerSpell":"","type":"new"}],"map":"any","mode":"any","preferredItemSlots":[],"sortrank":0,"startedFrom":"blank","title":"vn","type":"custom","uid":"4d7dc320-1860-11f0-acd8-cdfc9c909c19"}],"timestamp":0}
-        elif self.config.champ == 54:
-            eq_config_json = {"accountId":0,"itemSets":[{"associatedChampions":[],"associatedMaps":[11,12],"blocks":[{"hideIfSummonerSpell":"","items":[{"count":1,"id":"3047"},{"count":1,"id":"3068"},{"count":1,"id":"2504"},{"count":1,"id":"6665"},{"count":1,"id":"3083"},{"count":1,"id":"3143"}],"showIfSummonerSpell":"","type":"new"}],"map":"any","mode":"any","preferredItemSlots":[],"sortrank":0,"startedFrom":"blank","title":"malphite","type":"custom","uid":"4d7dc320-1860-11f0-acd8-cdfc9c909c19"}],"timestamp":0}
-        elif self.config.champ == 15:
-            eq_config_json = {"accountId":0,"itemSets":[{"associatedChampions":[],"associatedMaps":[11,12],"blocks":[{"hideIfSummonerSpell":"","items":[{"count":1,"id":"3508"},{"count":1,"id":"6675"},{"count":1,"id":"3031"},{"count":1,"id":"3036"},{"count":1,"id":"3072"},{"count":1,"id":"3032"}],"showIfSummonerSpell":"","type":"new"}],"map":"any","mode":"any","preferredItemSlots":[],"sortrank":0,"startedFrom":"blank","title":"sivir","type":"custom","uid":"4d7dc320-1860-11f0-acd8-cdfc9c909c19"}],"timestamp":0}
-        elif self.config.champ == 11:
-            eq_config_json = {"accountId":0,"itemSets":[{"associatedChampions":[],"associatedMaps":[11,12],"blocks":[{"hideIfSummonerSpell":"","items":[{"count":1,"id":"3153"},{"count":1,"id":"3032"},{"count":1,"id":"3031"},{"count":1,"id":"3036"},{"count":1,"id":"6675"},{"count":1,"id":"3006"}],"showIfSummonerSpell":"","type":"new"}],"map":"any","mode":"any","preferredItemSlots":[],"sortrank":0,"startedFrom":"blank","title":"master","type":"custom","uid":"4d7dc320-1860-11f0-acd8-cdfc9c909c19"}],"timestamp":0}
-        else:
-            eq_config_json = {"accountId":0,"itemSets":[{"associatedChampions":[],"associatedMaps":[11,12],"blocks":[{"hideIfSummonerSpell":"","items":[{"count":1,"id":"3153"},{"count":1,"id":"3032"},{"count":1,"id":"3031"},{"count":1,"id":"3036"},{"count":1,"id":"6675"},{"count":1,"id":"3006"}],"showIfSummonerSpell":"","type":"new"}],"map":"any","mode":"any","preferredItemSlots":[],"sortrank":0,"startedFrom":"blank","title":"test","type":"custom","uid":"4d7dc320-1860-11f0-acd8-cdfc9c909c19"}],"timestamp":0}
-        self.api.mod_item_sets(eq_config_json)
-
 
     @staticmethod
     def print_ascii() -> None:
