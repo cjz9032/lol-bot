@@ -339,13 +339,14 @@ def shop(game_time: int) -> None:
     keypress('p')  # open shop
     sleep(1)
     left_click((0.5478, 0.1971))
+    game_time2 = game_server.get_game_time()
 
     max_num = 2
-    if game_time > 600:
+    if game_time2 > 600:
         max_num = 4
-    elif game_time > 900:
+    elif game_time2 > 900:
         max_num = 5
-    elif game_time > 1200:
+    elif game_time2 > 1200:
         max_num = 6
 
     # repeat to click one

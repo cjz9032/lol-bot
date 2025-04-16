@@ -7,6 +7,8 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
+from lolbot.system import OS
+
 CONFIG_DIR = Path(__file__).resolve().parents[3] / 'lolbot-settings'
 BAK_DIR = os.path.join(CONFIG_DIR, 'bak')
 LOG_DIR = os.path.join(CONFIG_DIR, 'logs')
@@ -67,6 +69,7 @@ class Config:
     font_scale: float = .7
     champ: int = 67
     main: bool = True
+    riot: bool = OS != 'Windows'
     friend: str = None
 
 
@@ -87,6 +90,9 @@ def load_config() -> Config:
 
             if data.get('main') == None:
                 data['main'] = True
+
+            if data.get('riot') == None:
+                data['riot'] = OS != 'Windows'
 
             if data.get('friend') == None:
                 data['friend'] = ""
