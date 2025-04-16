@@ -210,7 +210,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
 
     for i in range(60):
         hc = game_server.get_summoner_health()
-        if (l_game_time > FIRST_TOWER_TIME if hc < .01 else hc < .1) or (int(json.loads(game_server.data)['activePlayer']['currentGold']) > 4000):
+        if (l_game_time > FIRST_TOWER_TIME if hc < .01 else hc < .1) or (int(json.loads(game_server.data)['activePlayer']['currentGold']) > 5000):
             keypress('f')
             right_click(retreat)
             sleep(3)
@@ -351,14 +351,14 @@ def shop(game_time: int) -> None:
 
     # repeat to click one
     for i in range(max_num):
-        left_click((0.2434 + (0.0391 * (i)), 0.3710))
+        left_click((0.2434 + (0.0391 * (i)), 0.3710), 0)
         # if GLOBAL_CHAMP == 33 or GLOBAL_CHAMP == 222 or GLOBAL_CHAMP == 15:
         #     left_db_click((0.2448, 0.7552), 0.1)
         # elif GLOBAL_CHAMP == 10:
         #     left_db_click((0.3148, 0.7552), 0.1)
         # else:
         #     left_db_click((0.2148, 0.7552), 0.1)
-        left_click(SHOP_PURCHASE_ITEM_BUTTON)
+        left_click(SHOP_PURCHASE_ITEM_BUTTON, 0)
         
     # keypress('esc')
     sleep(1)
