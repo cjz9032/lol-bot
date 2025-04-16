@@ -51,7 +51,7 @@ class Launcher:
 
     def launchWindows(self):
         if self.config.riot:
-            cmd.run(cmd.LAUNCH_CLIENT)
+            cmd.run(self.config.windows_install_dir[0] + cmd.LAUNCH_CLIENT[1:])
             sleep(50)
         else:
             # wegame tray
