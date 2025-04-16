@@ -211,7 +211,9 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
 
     for i in range(60):
         hc = game_server.get_summoner_health()
-        if (l_game_time > FIRST_TOWER_TIME if hc < .01 else hc < .1) or (int(json.loads(game_server.data)['activePlayer']['currentGold']) > 5000):
+        mono = int(json.loads(game_server.data)['activePlayer']['currentGold'])
+        #  or (False if  l_game_time > 1200 else mono > 4000)
+        if (l_game_time > FIRST_TOWER_TIME if hc < .01 else hc < .1):
             keypress('f')
             right_click(retreat)
             sleep(3)
