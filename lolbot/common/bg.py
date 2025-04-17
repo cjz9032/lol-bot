@@ -16,7 +16,7 @@ class BG:
 
     def on_release(self, key):
         self.event_queue.put(f"按键被释放: {key}")
-        if key == Key.esc:  # 按下 Esc 键退出
+        if key == Key.f11:  # 按下 Esc 键退出
             self.event_queue.put(f"按键被释放2: {key}")
             self.event_queue.put("stop")  # 发送停止信号
             return False  # 停止监听器
