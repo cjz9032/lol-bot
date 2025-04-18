@@ -1,4 +1,25 @@
 :loop
+
+git pull
+if %ERRORLEVEL% neq 0 (
+    echo git pull failed: %ERRORLEVEL%
+) else (
+    echo git pull cp
+)
+
+echo ps f
+powershell -Command ^
+    "$processes = Get-Process -Name powershell; ^
+    foreach ($process in $processes) { ^
+        $cmdLine = (Get-WmiObject Win32_Process -Filter \"ProcessId=$($process.Id)\").CommandLine; ^
+        if ($cmdLine -like \"*main.pyw*\") { ^
+            Stop-Process -Id $process.Id -Force; ^
+        } ^
+    }"
+echo ps e
+
+
+
 :: 1. 杀掉所有 Python 进程
 taskkill /f /im python.exe /t >nul 2>&1
 taskkill /F /IM "League of Legends.exe"
@@ -18,22 +39,4 @@ start "" powershell -NoExit -Command "cd \""%~dp0\"\"; python.exe .\main.pyw"
 :: 4. 等待 3600 秒
 timeout /t 7200 /nobreak >nul
 
-
-echo ps f
-powershell -Command ^
-    "$processes = Get-Process -Name powershell; ^
-    foreach ($process in $processes) { ^
-        $cmdLine = (Get-WmiObject Win32_Process -Filter \"ProcessId=$($process.Id)\").CommandLine; ^
-        if ($cmdLine -like \"*main.pyw*\") { ^
-            Stop-Process -Id $process.Id -Force; ^
-        } ^
-    }"
-echo ps e
-
-git pull
-if %ERRORLEVEL% neq 0 (
-    echo git pull failed: %ERRORLEVEL%
-) else (
-    echo git pull cp
-)
 goto loop
