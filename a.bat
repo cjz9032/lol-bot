@@ -7,16 +7,7 @@ if %ERRORLEVEL% neq 0 (
     echo git pull cp
 )
 
-echo ps f
-powershell -Command ^
-    "$processes = Get-Process -Name powershell; ^
-    foreach ($process in $processes) { ^
-        $cmdLine = (Get-WmiObject Win32_Process -Filter \"ProcessId=$($process.Id)\").CommandLine; ^
-        if ($cmdLine -like \"*main.pyw*\") { ^
-            Stop-Process -Id $process.Id -Force; ^
-        } ^
-    }"
-echo ps e
+
 
 
 
@@ -26,6 +17,7 @@ taskkill /F /IM "League of Legends.exe"
 taskkill /F /IM "Client.exe"
 taskkill /F /IM League*
 taskkill /F /IM Riot*
+taskkill /F /IM "powershell.exe"
 :: 2. 杀掉旧的 PowerShell 进程（匹配特定命令行）
 for /f "tokens=2 delims=," %%A in (
     'tasklist /v /fo csv ^| findstr /i "main.pyw"'
