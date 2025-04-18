@@ -19,4 +19,16 @@ start "" powershell -NoExit -Command "cd \""%~dp0\"\"; python.exe .\main.pyw"
 :: 4. 等待 3600 秒
 timeout /t 7200 /nobreak >nul
 
+
+echo 正在查找并结束特定的 PowerShell 进程...
+powershell -Command ^
+    "$processes = Get-Process -Name powershell; ^
+    foreach ($process in $processes) { ^
+        $cmdLine = (Get-WmiObject Win32_Process -Filter \"ProcessId=$($process.Id)\").CommandLine; ^
+        if ($cmdLine -like \"*main.pyw*\") { ^
+            Stop-Process -Id $process.Id -Force; ^
+        } ^
+    }"
+echo 特定的 PowerShell 进程已结束。
+
 goto loop
