@@ -5,7 +5,6 @@ taskkill /F /IM "League of Legends.exe"
 taskkill /F /IM "Client.exe"
 taskkill /F /IM League*
 taskkill /F /IM Riot*
-
 :: 2. 杀掉旧的 PowerShell 进程（匹配特定命令行）
 for /f "tokens=2 delims=," %%A in (
     'tasklist /v /fo csv ^| findstr /i "main.pyw"'
@@ -20,7 +19,7 @@ start "" powershell -NoExit -Command "cd \""%~dp0\"\"; python.exe .\main.pyw"
 timeout /t 7200 /nobreak >nul
 
 
-echo 正在查找并结束特定的 PowerShell 进程...
+echo ps f
 powershell -Command ^
     "$processes = Get-Process -Name powershell; ^
     foreach ($process in $processes) { ^
@@ -29,6 +28,12 @@ powershell -Command ^
             Stop-Process -Id $process.Id -Force; ^
         } ^
     }"
-echo 特定的 PowerShell 进程已结束。
+echo ps e
 
+git pull
+if %ERRORLEVEL% neq 0 (
+    echo git pull failed: %ERRORLEVEL%
+) else (
+    echo git pull cp
+)
 goto loop
