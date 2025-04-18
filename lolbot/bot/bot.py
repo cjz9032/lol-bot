@@ -421,7 +421,13 @@ class Bot:
             eq_config_json = {"accountId":0,"itemSets":[{"associatedChampions":[],"associatedMaps":[11,12],"blocks":[{"hideIfSummonerSpell":"","items":[{"count":1,"id":"3153"},{"count":1,"id":"3032"},{"count":1,"id":"3031"},{"count":1,"id":"3036"},{"count":1,"id":"6675"},{"count":1,"id":"3006"}],"showIfSummonerSpell":"","type":"new"}],"map":"any","mode":"any","preferredItemSlots":[],"sortrank":0,"startedFrom":"blank","title":"master","type":"custom","uid":"4d7dc320-1860-11f0-acd8-cdfc9c909c19"}],"timestamp":0}
         else:
             eq_config_json = {"accountId":0,"itemSets":[{"associatedChampions":[],"associatedMaps":[11,12],"blocks":[{"hideIfSummonerSpell":"","items":[{"count":1,"id":"3153"},{"count":1,"id":"3032"},{"count":1,"id":"3031"},{"count":1,"id":"3036"},{"count":1,"id":"6675"},{"count":1,"id":"3006"}],"showIfSummonerSpell":"","type":"new"}],"map":"any","mode":"any","preferredItemSlots":[],"sortrank":0,"startedFrom":"blank","title":"test","type":"custom","uid":"4d7dc320-1860-11f0-acd8-cdfc9c909c19"}],"timestamp":0}
-        self.api.mod_item_sets(eq_config_json)
+        try:
+            self.api.mod_item_sets(eq_config_json)
+        except LCUError as e:
+            log.warning("mod_item_sets failed")
+            log.warning(e)
+            pass
+            
 
     def set_game_config(self) -> None:
         """Overwrites the League of Legends game config."""

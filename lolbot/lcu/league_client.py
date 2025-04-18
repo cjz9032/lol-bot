@@ -106,9 +106,8 @@ class LeagueClient:
         try:
             response = self.client.put(url, json=body)
             return response
-        except Exception as e:
-            raise e
-
+        except requests.RequestException as e:
+            raise LCUError(f"Error mod_item_sets: {e}")
     def get_accountId(self) -> str:
         url = f"{self.endpoint}/lol-summoner/v1/current-summoner"
         try:
