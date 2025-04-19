@@ -41,6 +41,7 @@ class BotTab:
         self.games_played = multiprocessing.Value('i', 0)
         self.bot_errors = multiprocessing.Value('i', 0)
         self.api = api
+        self.config = config.load_config()
         self.game_server = game_server.GameServer()
         self.output_queue = []
         self.endpoint = None
