@@ -51,11 +51,19 @@ win_x = 0
 win_y = 0
 win_l = 0
 win_h = 0
-
+from lolbot.common import config
 
 class GameError(Exception):
     """Indicates the game should be terminated"""
     pass
+
+config = config.load_config()
+
+def disableLCU() -> bool:
+    # return OS == "Windows" and config.riot
+    return False
+
+hasLocked = False
 
 def play_game(champ: int) -> None:
     """Plays a single game of League of Legends, takes actions based on game time"""
@@ -70,8 +78,8 @@ def play_game(champ: int) -> None:
         game_loop(game_server)
     except GameError as e:
         log.warning(e)
-        cmd.run(cmd.CLOSE_GAME)
-        sleep(30)
+        cmd.run(cmd.CLOSE_ALL)
+        sleep(10)
     except window.WindowNotFound:
         log.info(f"Game Complete")
 
@@ -103,14 +111,49 @@ def wait_for_connection(game_server: GameServer) -> None:
     raise GameError("Game window opened but connection failed")
 
 
+_nowTime = datetime.now()
+_gameTime = 0
+
+def syncGameTime(new:int) -> None:
+    global _gameTime
+    global _nowTime
+    _gameTime = new
+    _nowTime = datetime.now()
+
+def getGameTime(game_server: GameServer)-> int:
+    if disableLCU():
+        return (datetime.now() - _nowTime).total_seconds() + _gameTime
+    else:
+        return game_server.get_game_time()
+    
+
+def get_summoner_health(game_server: GameServer)-> float:
+    if disableLCU():
+        return 1.0
+    else:
+        return game_server.get_summoner_health()
+
+def summoner_is_dead(game_server: GameServer)-> bool:
+    if disableLCU():
+        # 325 7xx
+        coords = window.convert_ratio_abs((0.3173,0.9648), win_x, win_y, win_l, win_h)
+        return window.is_color_close_by_xy(coords)
+    else:
+        return game_server.summoner_is_dead()
 
 def game_loop(game_server: GameServer) -> None:
-    game_time = 0
     server_errors = 0
     lastGold = 0
     lastGoldErr = 0
+    game_time = game_server.get_game_time()
+    syncGameTime(game_time)
+    log.info("CLOSE_VGC")
+    cmd.run(cmd.CLOSE_VGC)
+
 
     def detectOffline() -> None:
+        if disableLCU(): 
+            return
         nonlocal lastGold, lastGoldErr, server_errors
         if game_time > MINION_CLASH_TIME:
             curGold = int(json.loads(game_server.data)['activePlayer']['currentGold'])
@@ -130,7 +173,7 @@ def game_loop(game_server: GameServer) -> None:
     try:
         while True:
             # Don't start new sequence when dead
-            if game_server.summoner_is_dead():
+            if summoner_is_dead(game_server):
                 shop(game_server)
                 upgrade_abilities()
                 sleep(5)
@@ -138,7 +181,7 @@ def game_loop(game_server: GameServer) -> None:
                 continue
 
             # Take action based on game time
-            game_time = game_server.get_game_time()
+            game_time = getGameTime(game_server)
             detectOffline()
             if game_time < LOADING_SCREEN_TIME:
                 loading_screen(game_server)
@@ -171,13 +214,14 @@ def loading_screen(game_server: GameServer) -> None:
 
 def game_start(game_server: GameServer) -> None:
     """Buys starter items and waits for minions to clash (minions clash at 90 seconds)"""
+    global hasLocked
     log.info("Waiting for Minion Clash")
     sleep(10)
     keypress('y')  # lock screen
+    hasLocked = True
     upgrade_abilities()
-
     # Sit under turret till minions clash mid lane
-    while game_server.get_game_time() < MINION_CLASH_TIME:
+    while getGameTime(game_server) < MINION_CLASH_TIME:
         right_click(MINI_MAP_UNDER_TURRET)  # to prevent afk warning popup
         left_click(AFK_OK_BUTTON)
     log.info("Playing Game")
@@ -192,6 +236,10 @@ def signal():
 
 def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_to_lane: int, game_time: int) -> None:
     global GLOBAL_CHAMP
+    global hasLocked
+    if not hasLocked:
+        keypress('y')  # lock screen
+        hasLocked = True
     """Buys items, levels up abilities, heads to lane, attacks, retreats, backs"""
     shop(game_server)
     upgrade_abilities()
@@ -207,18 +255,19 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
 
 
     # Main attack move loop. This sequence attacks and then de-aggros to prevent them from dying 50 times.
-    l_game_time = game_server.get_game_time()
+    l_game_time = getGameTime(game_server)
 
     for i in range(60):
-        hc = game_server.get_summoner_health()
-        mono = int(json.loads(game_server.data)['activePlayer']['currentGold'])
+        hc = get_summoner_health(game_server)
+        # mono = int(json.loads(game_server.data)['activePlayer']['currentGold'])
         #  or (False if  l_game_time > 1200 else mono > 4000)
+        
         if (l_game_time > FIRST_TOWER_TIME if hc < .01 else hc < .1):
             keypress('f')
             right_click(retreat)
             sleep(3)
             break
-        if game_server.summoner_is_dead():
+        if summoner_is_dead(game_server):
             return
         
      
@@ -256,7 +305,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
                 keypress('q')
                 keypress('e')
                 attack_click(attack_position)
-                hc = game_server.get_summoner_health()
+                hc = get_summoner_health(game_server)
                 if hc < .5:
                     self_press('r')
         elif GLOBAL_CHAMP == 222:

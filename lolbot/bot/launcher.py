@@ -76,7 +76,6 @@ class Launcher:
     def launch_sequence(self):
         self.api.update_auth()
 
-        # League is Running
         if cmd.run(cmd.IS_CLIENT_RUNNING):
             if self.attempts == 0:
                 log.warning("League opened with prior login")

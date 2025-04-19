@@ -51,6 +51,8 @@ class Bot:
         self.phase_errors = 0
         self.champ = 0
         # self.launch_errors = 0
+    def isRiotWin(self) -> bool:
+        return OS == "Windows" and self.config.riot
 
     def run(self, message_queue: mp.Queue, games: mp.Value, errors: mp.Value) -> None:
         """Main loop, gets an account, launches league, monitors account level, and repeats."""
@@ -112,6 +114,11 @@ class Bot:
                 case "WaitingForStats":
                     self.wait_for_stats()
                 case "PreEndOfGame":
+                    if self.isRiotWin():
+                        cmd.run(cmd.CLOSE_ALL)
+                        log.error("local re client. Exiting")
+                        sys.exit()
+                        return
                     self.pre_end_of_game()
                 case "EndOfGame":
                     self.end_of_game()
@@ -126,6 +133,15 @@ class Bot:
             try:
                 self.prev_phase = self.phase
                 self.phase = self.api.get_phase()
+
+                if (
+                    self.isRiotWin()
+                    and self.prev_phase == "InProgress"
+                    and self.phase == "Reconnect"
+                ):
+                    self.phase_errors = MAX_PHASE_ERRORS
+                    raise BotError("Transition error Force. restart")
+
                 if (
                     self.prev_phase == self.phase
                     and self.phase != "Matchmaking"

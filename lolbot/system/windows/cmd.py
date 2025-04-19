@@ -24,7 +24,8 @@ CLOSE_GAME = 'taskkill /F /IM "League of Legends.exe"'
 CLOSE_LOGIN = 'taskkill /F /IM "Client.exe"'
 CLOSE_CLIENT = 'taskkill /F /IM League*'
 CLOSE_LAUNCHER = 'taskkill /F /IM Riot*'
-CLOSE_ALL = f"{CLOSE_LAUNCHER} & {CLOSE_CLIENT} & {CLOSE_LOGIN}"
+CLOSE_VGC = 'taskkill /F /IM vgc*'
+CLOSE_ALL = f"{CLOSE_LAUNCHER} & {CLOSE_CLIENT} & {CLOSE_LOGIN} & {CLOSE_VGC}"
 
 
 def run(command: str) -> bool:  
