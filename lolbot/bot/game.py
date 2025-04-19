@@ -63,6 +63,9 @@ def disableLCU() -> bool:
     # return OS == "Windows" and config.riot
     return False
 
+def isWinRiot() -> bool:
+    return OS == "Windows" and config.riot
+
 hasLocked = False
 
 def play_game(champ: int) -> None:
@@ -147,8 +150,9 @@ def game_loop(game_server: GameServer) -> None:
     lastGoldErr = 0
     game_time = game_server.get_game_time()
     syncGameTime(game_time)
-    log.info("CLOSE_VGC")
-    cmd.run(cmd.CLOSE_VGC)
+    if isWinRiot():
+        log.info("CLOSE_VGC")
+        cmd.run(cmd.CLOSE_VGC)
 
 
     def detectOffline() -> None:
