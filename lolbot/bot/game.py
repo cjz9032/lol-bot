@@ -181,15 +181,24 @@ def game_loop(game_server: GameServer) -> None:
             log.info("Game State unchanged might be crashed")
             raise GameError("Game State unchanged might be crashed")
         
+
+    checkDiedCounts = 0
+
     try:
         while True:
             # Don't start new sequence when dead
             if summoner_is_dead(game_server):
-                shop(game_server)
-                upgrade_abilities()
                 sleep(5)
+                shop()
+                checkDiedCounts += 1
+                if checkDiedCounts > 12:
+                    cmd.run(cmd.CLOSE_ALL)
+                    log.error("offline died detect Exiting")
+                    return
                 detectOffline()
                 continue
+            checkDiedCounts = 0
+            upgrade_abilities()
 
             # Take action based on game time
             game_time = getGameTime(game_server)
@@ -402,7 +411,10 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
 
 
 def shop(game_server: GameServer) -> None:
-    global GLOBAL_CHAMP
+    curGold = int(json.loads(game_server.data)['activePlayer']['currentGold'])
+    if curGold < 1000:
+        return
+
     """Opens the shop and attempts to purchase items via default shop hotkeys"""
     keypress('p')  # open shop
     sleep(1)
@@ -420,14 +432,7 @@ def shop(game_server: GameServer) -> None:
     # repeat to click one
     for i in range(max_num):
         left_click((0.2434 + (0.0391 * (i)), 0.3710), 0.1)
-        # if GLOBAL_CHAMP == 33 or GLOBAL_CHAMP == 222 or GLOBAL_CHAMP == 15:
-        #     left_db_click((0.2448, 0.7552), 0.1)
-        # elif GLOBAL_CHAMP == 10:
-        #     left_db_click((0.3148, 0.7552), 0.1)
-        # else:
-        #     left_db_click((0.2148, 0.7552), 0.1)
         left_click(SHOP_PURCHASE_ITEM_BUTTON, 0.1)
-        
     # keypress('esc')
     sleep(1)
     left_click(SHOP_CLOSE, .3)
