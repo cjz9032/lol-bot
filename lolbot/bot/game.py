@@ -87,11 +87,12 @@ def play_game(champ: int) -> None:
         left_click(CENTER_OF_SCREEN)
         game_loop(game_server)
     except GameError as e:
-        log.warning(e)
+        log.error(e)
         cmd.run(cmd.CLOSE_ALL)
         hasLocked = False
+        log.error("check above error Exiting")
         sys.exit()
-        sleep(10)
+        return
     except window.WindowNotFound:
         log.info(f"Game Complete")
 
