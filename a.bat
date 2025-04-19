@@ -1,5 +1,5 @@
 :loop
-
+cd /d "%~dp0"
 git pull
 if %ERRORLEVEL% neq 0 (
     echo git pull failed: %ERRORLEVEL%
