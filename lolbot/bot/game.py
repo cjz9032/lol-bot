@@ -71,17 +71,22 @@ hasLocked = False
 def play_game(champ: int) -> None:
     """Plays a single game of League of Legends, takes actions based on game time"""
     global GLOBAL_CHAMP
+    global hasLocked
     GLOBAL_CHAMP = champ
     log.info(f"play game " + str(champ))
     game_server = GameServer()
     try:
+        hasLocked = False
         wait_for_game_window()
         wait_for_connection(game_server)
         init_game_window()
+        if OS == 'Windows':
+            window.bring_to_front(window.GAME_WINDOW)
         game_loop(game_server)
     except GameError as e:
         log.warning(e)
         cmd.run(cmd.CLOSE_ALL)
+        hasLocked = False
         sleep(10)
     except window.WindowNotFound:
         log.info(f"Game Complete")
@@ -243,6 +248,8 @@ def signal():
 def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_to_lane: int, game_time: int) -> None:
     global GLOBAL_CHAMP
     global hasLocked
+    log.info('yyyyyyyyyyyyy')
+    log.info(hasLocked)
     if not hasLocked:
         keypress('y')  # lock screen
         hasLocked = True
