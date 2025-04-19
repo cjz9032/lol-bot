@@ -145,6 +145,8 @@ def summoner_is_dead(game_server: GameServer)-> bool:
         return game_server.summoner_is_dead()
 
 def game_loop(game_server: GameServer) -> None:
+    global hasLocked
+    hasLocked = False
     server_errors = 0
     lastGold = 0
     lastGoldErr = 0
