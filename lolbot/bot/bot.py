@@ -27,9 +27,9 @@ POST_GAME_OK_RATIO = (0.4996, 0.9397)
 POPUP_SEND_EMAIL_X_RATIO = (0.6960, 0.1238)
 
 # Errors
-MAX_BOT_ERRORS = 3
+# MAX_BOT_ERRORS = 1
 # MAX_LAUNCH_ERRORS = 3
-MAX_PHASE_ERRORS = 15
+MAX_PHASE_ERRORS = 10
 
 
 class BotError(Exception):
@@ -75,15 +75,16 @@ class Bot:
                 log.error(be)
                 self.bot_errors += 1
                 self.phase_errors = 0
-                if self.bot_errors == MAX_BOT_ERRORS:
-                    log.error("Max errors reached. Exiting")
-                    cmd.run(cmd.CLOSE_ALL)
-                    sys.exit()
-                    return
-                else:
-                    cmd.run(cmd.CLOSE_ALL)
-                    sys.exit()
-                    return
+                # if self.bot_errors == MAX_BOT_ERRORS:
+                log.error("Max errors reached. Exiting")
+                cmd.run(cmd.CLOSE_ALL)
+                sys.exit()
+                return
+                # else:
+                #     log.error("Max errors reached. Exiting")
+                #     cmd.run(cmd.CLOSE_ALL)
+                #     sys.exit()
+                #     return
             except launcher.LaunchError as le:
                 cmd.run(cmd.CLOSE_ALL)
                 log.error(le)
