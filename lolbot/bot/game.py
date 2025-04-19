@@ -155,12 +155,18 @@ def summoner_is_dead(game_server: GameServer)-> bool:
 
 lastGold = 0
 lastGoldErr = 0
-
-def detectOffline(game_server) -> None:
+lastCheckTime = 0
+def detectOffline(game_server: GameServer) -> None:
     if disableLCU(): 
         return
-    global lastGold, lastGoldErr
+    global lastGold, lastGoldErr, lastCheckTime
     game_time = game_server.get_game_time()
+    if game_time - lastCheckTime < 10:
+        return
+    
+    lastCheckTime = game_time
+
+    
     if game_time > MINION_CLASH_TIME:
         curGold = int(json.loads(game_server.data)['activePlayer']['currentGold'])
         if curGold == lastGold:
