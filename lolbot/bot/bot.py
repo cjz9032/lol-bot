@@ -418,7 +418,8 @@ class Bot:
                 logged = True
             tried += 1
             sleep(3)
-            if tried > 10:
+            max_num = 5 if self.config.riot else 10
+            if tried > max_num:
                 # raise BotError("Client is patching too long")
                 break
         log.info("Client is up to date")
