@@ -7,6 +7,8 @@ import random
 from time import sleep
 from datetime import datetime, timedelta
 import json
+from typing import Callable
+import sys
 
 from lolbot.lcu.game_server import GameServer, GameServerError
 from lolbot.system import mouse, keys, window, cmd, OS
@@ -88,6 +90,7 @@ def play_game(champ: int) -> None:
         log.warning(e)
         cmd.run(cmd.CLOSE_ALL)
         hasLocked = False
+        sys.exit()
         sleep(10)
     except window.WindowNotFound:
         log.info(f"Game Complete")
@@ -193,6 +196,7 @@ def game_loop(game_server: GameServer) -> None:
                 if checkDiedCounts > 12:
                     cmd.run(cmd.CLOSE_ALL)
                     log.error("offline died detect Exiting")
+                    sys.exit()
                     return
                 detectOffline()
                 continue
@@ -207,11 +211,11 @@ def game_loop(game_server: GameServer) -> None:
             elif game_time < MINION_CLASH_TIME:
                 game_start(game_server)
             elif game_time < GROW_TIME:
-                play(game_server, MINI_MAP_GROW_ATTACK, MINI_MAP_UNDER_TURRET, 20, game_time)
+                play(game_server, MINI_MAP_GROW_ATTACK, MINI_MAP_UNDER_TURRET, 20, game_time, detectOffline)
             elif game_time < FIRST_TOWER_TIME:
-                play(game_server, MINI_MAP_CENTER_MID_ATTACK, MINI_MAP_UNDER_TURRET, 20, game_time)
+                play(game_server, MINI_MAP_CENTER_MID_ATTACK, MINI_MAP_UNDER_TURRET, 20, game_time, detectOffline)
             elif game_time < MAX_GAME_TIME:
-                play(game_server, MINI_MAP_ENEMY_NEXUS, MINI_MAP_CENTER_MID, 35, game_time)
+                play(game_server, MINI_MAP_ENEMY_NEXUS, MINI_MAP_CENTER_MID, 35, game_time, detectOffline)
             else:
                 raise GameError("Game has exceeded the max time limit")
     except GameServerError as e:
@@ -253,7 +257,7 @@ def signal():
         left_click(FACE_FRONT)
     keypress('u')
 
-def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_to_lane: int, game_time: int) -> None:
+def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_to_lane: int, game_time: int, detect: Callable) -> None:
     global GLOBAL_CHAMP
     global hasLocked
     log.info('yyyyyyyyyyyyy')
@@ -279,6 +283,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
     l_game_time = getGameTime(game_server)
 
     for i in range(60):
+        detect()
         hc = get_summoner_health(game_server)
         # mono = int(json.loads(game_server.data)['activePlayer']['currentGold'])
         #  or (False if  l_game_time > 1200 else mono > 4000)

@@ -82,6 +82,8 @@ class Bot:
                     return
                 else:
                     cmd.run(cmd.CLOSE_ALL)
+                    sys.exit()
+                    return
             except launcher.LaunchError as le:
                 cmd.run(cmd.CLOSE_ALL)
                 log.error(le)
