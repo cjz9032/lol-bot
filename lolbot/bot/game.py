@@ -82,6 +82,7 @@ def play_game(champ: int) -> None:
         init_game_window()
         if OS == 'Windows':
             window.bring_to_front(window.GAME_WINDOW)
+        left_click(CENTER_OF_SCREEN)
         game_loop(game_server)
     except GameError as e:
         log.warning(e)
@@ -103,8 +104,6 @@ def wait_for_game_window() -> None:
                 if OS == 'Windows':
                     window.bring_to_front(window.GAME_WINDOW)
                 sleep(3)
-                left_click(CENTER_OF_SCREEN)
-                left_click(CENTER_OF_SCREEN)
                 return
         except window.WindowNotFound:
             pass
