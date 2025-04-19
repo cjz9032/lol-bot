@@ -189,7 +189,7 @@ def game_loop(game_server: GameServer) -> None:
             # Don't start new sequence when dead
             if summoner_is_dead(game_server):
                 sleep(5)
-                shop()
+                shop(game_server)
                 checkDiedCounts += 1
                 if checkDiedCounts > 12:
                     cmd.run(cmd.CLOSE_ALL)
