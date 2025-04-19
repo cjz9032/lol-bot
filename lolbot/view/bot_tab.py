@@ -165,7 +165,9 @@ class BotTab:
                 requests.get(f"https://www.pushplus.plus/send?token=513c57c01734486086a393226c97c55d&title={mid}&content=hang&template=txt")
         except Exception as e:
             log.error(f"Failed to read mid: {e}")
-
+    def isRiotWin(self) -> bool:
+        return OS == "Windows" and self.config.riot
+    
     def update_info_panel(self) -> None:
         if not cmd.run(cmd.IS_CLIENT_RUNNING):
             msg = textwrap.dedent("""\
@@ -181,6 +183,12 @@ class BotTab:
             phase = self.api.get_phase()
             game_time = "-"
             champ = "-"
+            if self.isRiotWin() and (phase == "PreEndOfGame" or phase == "EndOfGame"):
+                self.close_client()
+                self.message_queue.put("Clear")
+                self.stop_bot()
+                return
+
             match phase:
                 case "None":
                     phase = "In Main Menu"
