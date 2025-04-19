@@ -156,10 +156,11 @@ def summoner_is_dead(game_server: GameServer)-> bool:
 lastGold = 0
 lastGoldErr = 0
 
-def detectOffline(game_time, game_server) -> None:
+def detectOffline(game_server) -> None:
     if disableLCU(): 
         return
     global lastGold, lastGoldErr
+    game_time = game_server.get_game_time()
     if game_time > MINION_CLASH_TIME:
         curGold = int(json.loads(game_server.data)['activePlayer']['currentGold'])
         if curGold == lastGold:
@@ -205,14 +206,13 @@ def game_loop(game_server: GameServer) -> None:
                     log.error("offline died detect Exiting")
                     sys.exit()
                     return
-                detectOffline()
+                detectOffline(game_server)
                 continue
             checkDiedCounts = 0
             upgrade_abilities()
 
             # Take action based on game time
             game_time = getGameTime(game_server)
-            detectOffline()
             if game_time < LOADING_SCREEN_TIME:
                 loading_screen(game_server)
             elif game_time < MINION_CLASH_TIME:
@@ -291,7 +291,7 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
 
     for i in range(60):
         if random.uniform(0, 100) > 50:
-            detectOffline()
+            detectOffline(game_server)
         
         hc = get_summoner_health(game_server)
         # mono = int(json.loads(game_server.data)['activePlayer']['currentGold'])
