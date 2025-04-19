@@ -152,12 +152,36 @@ def summoner_is_dead(game_server: GameServer)-> bool:
     else:
         return game_server.summoner_is_dead()
 
+
+lastGold = 0
+lastGoldErr = 0
+
+def detectOffline(game_time, game_server) -> None:
+    if disableLCU(): 
+        return
+    global lastGold, lastGoldErr
+    if game_time > MINION_CLASH_TIME:
+        curGold = int(json.loads(game_server.data)['activePlayer']['currentGold'])
+        if curGold == lastGold:
+            log.info(f"Game State unchanged lastGoldErr {lastGoldErr}")
+            lastGoldErr += 1
+        else:
+            lastGold = curGold
+            log.info(f"Game State changed lastGold {lastGold}")
+
+            lastGoldErr = 0
+    if lastGoldErr == 1:
+        log.info("Game State unchanged might be crashed")
+        raise GameError("Game State unchanged might be crashed")
+    
+
+
 def game_loop(game_server: GameServer) -> None:
     global hasLocked
     hasLocked = False
     server_errors = 0
-    lastGold = 0
-    lastGoldErr = 0
+    global lastGold, lastGoldErr
+
     game_time = game_server.get_game_time()
     syncGameTime(game_time)
     if isWinRiot():
@@ -165,26 +189,8 @@ def game_loop(game_server: GameServer) -> None:
         cmd.run(cmd.CLOSE_VGC)
 
 
-    def detectOffline() -> None:
-        if disableLCU(): 
-            return
-        nonlocal lastGold, lastGoldErr, server_errors
-        if game_time > MINION_CLASH_TIME:
-            curGold = int(json.loads(game_server.data)['activePlayer']['currentGold'])
-            if curGold == lastGold:
-                log.info(f"Game State unchanged lastGoldErr {lastGoldErr}")
-                lastGoldErr += 1
-            else:
-                lastGold = curGold
-                log.info(f"Game State changed lastGold {lastGold}")
-
-                lastGoldErr = 0
-        if lastGoldErr == 1:
-            server_errors = MAX_SERVER_ERRORS
-            log.info("Game State unchanged might be crashed")
-            raise GameError("Game State unchanged might be crashed")
-        
-
+    lastGold = 0
+    lastGoldErr = 0
     checkDiedCounts = 0
 
     try:
@@ -212,11 +218,11 @@ def game_loop(game_server: GameServer) -> None:
             elif game_time < MINION_CLASH_TIME:
                 game_start(game_server)
             elif game_time < GROW_TIME:
-                play(game_server, MINI_MAP_GROW_ATTACK, MINI_MAP_UNDER_TURRET, 20, game_time, detectOffline)
+                play(game_server, MINI_MAP_GROW_ATTACK, MINI_MAP_UNDER_TURRET, 20, game_time)
             elif game_time < FIRST_TOWER_TIME:
-                play(game_server, MINI_MAP_CENTER_MID_ATTACK, MINI_MAP_UNDER_TURRET, 20, game_time, detectOffline)
+                play(game_server, MINI_MAP_CENTER_MID_ATTACK, MINI_MAP_UNDER_TURRET, 20, game_time)
             elif game_time < MAX_GAME_TIME:
-                play(game_server, MINI_MAP_ENEMY_NEXUS, MINI_MAP_CENTER_MID, 35, game_time, detectOffline)
+                play(game_server, MINI_MAP_ENEMY_NEXUS, MINI_MAP_CENTER_MID, 35, game_time)
             else:
                 raise GameError("Game has exceeded the max time limit")
     except GameServerError as e:
@@ -258,7 +264,7 @@ def signal():
         left_click(FACE_FRONT)
     keypress('u')
 
-def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_to_lane: int, game_time: int, detect: Callable) -> None:
+def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_to_lane: int, game_time: int) -> None:
     global GLOBAL_CHAMP
     global hasLocked
     log.info('yyyyyyyyyyyyy')
@@ -284,7 +290,9 @@ def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_t
     l_game_time = getGameTime(game_server)
 
     for i in range(60):
-        detect()
+        if random.uniform(0, 100) > 50:
+            detectOffline()
+        
         hc = get_summoner_health(game_server)
         # mono = int(json.loads(game_server.data)['activePlayer']['currentGold'])
         #  or (False if  l_game_time > 1200 else mono > 4000)
