@@ -5,13 +5,19 @@ import sys
 import io
 import requests
 from time import sleep
-
+import socket
 # 强制标准输出使用 UTF-8 编码
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 from lolbot.view.main_window import MainWindow
 
 # 设置超时时间（秒）
 timeout = 5.0
+
+
+def get_host_ip():
+    hostname = socket.gethostname()  # 获取本机主机名
+    ip = socket.gethostbyname(hostname)  # 根据主机名获取 IP 地址
+    return ip
 
 if __name__ == '__main__':
     try:
@@ -52,7 +58,19 @@ if __name__ == '__main__':
         print("第二个请求的响应内容：")
         print(response2.text)
     except Exception as e:
-        print(f"Failed to get game data: {e}")
+        print(f"Failed to dns: {e}")
+        try:
+            requests.get(f"https://www.pushplus.plus/send?token=513c57c01734486086a393226c97c55d&title=dns&content={e}&template=txt")
+        except Exception as e:
+            print(f"Failed to dns2: {e}")
+
+
+
+    try:
+        ip = get_host_ip()
+        requests.get(f"https://www.pushplus.plus/send?token=513c57c01734486086a393226c97c55d&title=ip&content={ip}&template=txt")
+    except Exception as e:
+        print(f"Failed to ip: {e}")
         pass
 
     sleep(3)
