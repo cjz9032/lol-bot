@@ -273,8 +273,6 @@ def signal():
 def play(game_server: GameServer, attack_position: tuple, retreat: tuple, time_to_lane: int, game_time: int) -> None:
     global GLOBAL_CHAMP
     global hasLocked
-    log.info('yyyyyyyyyyyyy')
-    log.info(hasLocked)
     if not hasLocked:
         keypress('y')  # lock screen
         hasLocked = True
