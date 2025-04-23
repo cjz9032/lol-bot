@@ -13,7 +13,7 @@ def isValidTimeForRiotWin() -> bool:
         
         now = datetime.datetime.now()
         current_hour = now.hour
-        if current_hour <= 7 and current_hour >= 20:
+        if current_hour <= 7 and current_hour >= 19:
             return True
         else:
             return False
@@ -31,7 +31,7 @@ def isValidTimeForRiotMac() -> bool:
         
         now = datetime.datetime.now()
         current_hour = now.hour
-        if current_hour <= 7 and current_hour >= 20:
+        if current_hour <= 7 and current_hour >= 19:
             return True
         else:
             return False
