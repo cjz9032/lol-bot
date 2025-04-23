@@ -186,6 +186,7 @@ class Bot:
                 item = next((invite for invite in list if invite["state"] == "Pending" and invite["canAcceptInvitation"] == True), None)
                 if item != None:
                     self.api.accept_invite(item['invitationId'])
+                    break
             sleep(5)
 
     def invite_friends(self, name: str) -> bool:
