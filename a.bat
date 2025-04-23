@@ -7,9 +7,7 @@ if %ERRORLEVEL% neq 0 (
     echo git pull cp
 )
 
-
-
-
+pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 :: 1. 杀掉所有 Python 进程
 taskkill /f /im python.exe /t >nul 2>&1

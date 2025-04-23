@@ -14,6 +14,7 @@ from time import sleep
 import sys
 import requests
 
+from day import isValidTimeForRiotMac, isValidTimeForRiotWin
 from lolbot.bot import game, launcher
 from lolbot.system import mouse, window, cmd, OS
 from lolbot.common import config, logger
@@ -170,6 +171,11 @@ class Bot:
             log.error(f"Failed to read mid: {e}")
 
     def wait_accept(self) -> None:
+        if not isValidTimeForRiotWin():
+            cmd.run(cmd.CLOSE_ALL)
+            log.error("isValidTimeForRiotWin match. Exiting")
+            return
+
         list = self.api.get_received_invitations()
         if list:
             item = next((invite for invite in list if invite["state"] == "Pending" and invite["canAcceptInvitation"] == True), None)
@@ -177,6 +183,10 @@ class Bot:
                 self.api.accept_invite(item['invitationId'])
 
     def invite_friends(self, name: str) -> bool:
+        if isValidTimeForRiotMac():
+            pass
+        else:
+            return True
         members = self.api.get_lobby_members()
         if len(members) != 2:
             smid = self.api.get_smid_by_name(name)
