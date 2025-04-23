@@ -175,12 +175,18 @@ class Bot:
             cmd.run(cmd.CLOSE_ALL)
             log.error("isValidTimeForRiotWin match. Exiting")
             return
+        times = 0
+        while True:
+            times+=1
+            if times > 30: 
+                break
 
-        list = self.api.get_received_invitations()
-        if list:
-            item = next((invite for invite in list if invite["state"] == "Pending" and invite["canAcceptInvitation"] == True), None)
-            if item != None:
-                self.api.accept_invite(item['invitationId'])
+            list = self.api.get_received_invitations()
+            if list:
+                item = next((invite for invite in list if invite["state"] == "Pending" and invite["canAcceptInvitation"] == True), None)
+                if item != None:
+                    self.api.accept_invite(item['invitationId'])
+            sleep(5)
 
     def invite_friends(self, name: str) -> bool:
         if isValidTimeForRiotMac():
@@ -205,7 +211,6 @@ class Bot:
         self.set_items()
         if self.config.main != True:
             self.wait_accept()
-            sleep(8)
             return
             
         
@@ -399,7 +404,6 @@ class Bot:
     def end_of_game(self) -> None:
         if self.config.main != True:
             self.wait_accept()
-            sleep(2)
             return
         
         
