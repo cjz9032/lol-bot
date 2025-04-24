@@ -14,7 +14,7 @@ def isValidTimeForRiotWin() -> bool:
         now = datetime.datetime.now()
         current_hour = now.hour
         print('current_hour' + str(current_hour))
-        if current_hour <= 7 or current_hour >= 19:
+        if current_hour <= 7 or current_hour >= 10:
             return True
         else:
             return False
