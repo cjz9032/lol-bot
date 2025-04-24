@@ -15,7 +15,7 @@ if __name__ == '__main__':
         if isValidTimeForRiotWin():
             break
         else:
-            sleep(60000)
+            sleep(60)
 
     gui: MainWindow = MainWindow()
     gui.show()
